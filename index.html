@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ziki — Autonomous Issue Tracker</title>
+  <title>Ziki — Autonomous Issue Tracker & Agent Garden</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -64,6 +64,62 @@
     .dot-active-rose {
       background-color: #ef4444;
     }
+
+    /* Whimsical Agent Garden Animations */
+    @keyframes agent-float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-3.5px); }
+    }
+    @keyframes agent-wave {
+      0%, 100% { transform: rotate(0deg); }
+      20% { transform: rotate(-9deg); }
+      40% { transform: rotate(9deg); }
+      60% { transform: rotate(-5deg); }
+      80% { transform: rotate(5deg); }
+    }
+    @keyframes agent-breathe {
+      0%, 100% { transform: scale(1); opacity: 0.95; }
+      50% { transform: scale(1.02); opacity: 1; }
+    }
+    @keyframes agent-sparkle {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.15); }
+    }
+    @keyframes agent-glow {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .anim-float {
+      animation: agent-float 3.5s ease-in-out infinite;
+    }
+    .anim-wave {
+      transform-origin: 20px 24px;
+      animation: agent-wave 2.2s ease-in-out infinite;
+    }
+    .anim-breathe {
+      transform-origin: center center;
+      animation: agent-breathe 4s ease-in-out infinite;
+    }
+    .anim-sparkle {
+      transform-origin: center center;
+      animation: agent-sparkle 6s linear infinite;
+    }
+    .anim-glow {
+      animation: agent-glow 2s ease-in-out infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .anim-float,
+      .anim-wave,
+      .anim-breathe,
+      .anim-sparkle,
+      .anim-glow,
+      .animate-pulse {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-[#f3f5f8] dark:bg-[#070b14] text-slate-800 dark:text-slate-200 min-h-screen p-3 sm:p-6 lg:p-10 transition-colors duration-200 selection:bg-sky-500 selection:text-white">
@@ -80,9 +136,6 @@
         <!-- Logo Area with custom logo drop-in support -->
         <div class="flex items-center gap-3">
           <a href="#" class="flex items-center gap-2 group">
-            <!-- Priority 1: User's custom dropped logo (logo.png or logo.svg) -->
-            <!-- Priority 2: Copied ziki-logo.png -->
-            <!-- Priority 3: Inline crisp SVG vector fallback -->
             <img 
               id="brand-logo" 
               src="logo.png" 
@@ -198,8 +251,9 @@
       <!-- Right Controls: Agents Menu, Profile, Real Points Pill, Notification Bell -->
       <div class="flex items-center gap-2.5 sm:gap-3">
         
-        <!-- AGENTS PILL BUTTON (Exact replica of real Ziki in screenshot) -->
-        <button 
+        <!-- AGENTS PILL BUTTON (Scrolls to Agent Garden & Opens Modal) -->
+        <a 
+          href="#agent-garden"
           onclick="openAgentsModal()" 
           class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold shadow-xs transition cursor-pointer"
         >
@@ -213,7 +267,7 @@
           <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
-        </button>
+        </a>
 
         <!-- USER PROFILE PILL (Purple C + Chukwu Sunday ⌵) -->
         <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold shadow-xs transition cursor-pointer">
@@ -270,22 +324,22 @@
     <!-- MAIN BODY -->
     <main class="p-6 sm:p-8 space-y-6">
       
-      <!-- HERO TITLE: Welcome back, Chukwu (Req #2) -->
+      <!-- HERO TITLE: Welcome back, Chukwu -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
             Welcome back, Chukwu
           </h1>
           <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Wednesday, October 28 · 48 issues in triage · 3 autonomous agents deployed in workspace.
+            Wednesday, October 28 · 48 issues in triage · 5 autonomous agents active in the garden.
           </p>
         </div>
 
         <div class="flex items-center gap-2">
-          <button onclick="openAgentsModal()" class="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition flex items-center gap-1.5 cursor-pointer">
-            <svg class="w-3.5 h-3.5 text-[#0284c7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="8" width="16" height="12" rx="2" /><path d="M12 4v4" /><path d="M9 14h.01" /><path d="M15 14h.01" /></svg>
-            <span>View Agents</span>
-          </button>
+          <a href="#agent-garden" class="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition flex items-center gap-1.5 cursor-pointer">
+            <span aria-hidden="true">🌱</span>
+            <span>Agent Garden</span>
+          </a>
           <button class="px-3.5 py-1.5 rounded-xl bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-white text-white dark:text-slate-900 text-xs font-semibold shadow-xs transition cursor-pointer">
             + New Issue
           </button>
@@ -312,16 +366,16 @@
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
           </div>
         </div>
 
         <!-- Card 2: Autonomous Agents -->
-        <div onclick="openAgentsModal()" class="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626] hover:border-slate-300 dark:hover:border-slate-700 transition cursor-pointer">
+        <a href="#agent-garden" class="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626] hover:border-slate-300 dark:hover:border-slate-700 transition cursor-pointer block">
           <div class="flex items-center justify-between text-xs font-medium text-slate-500 dark:text-slate-400">
             <span class="uppercase tracking-wider text-[11px] font-semibold">Autonomous Agents</span>
             <span class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold text-[11px]">
@@ -330,8 +384,8 @@
             </span>
           </div>
           <div class="mt-3 flex items-baseline justify-between">
-            <div class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white tabular-nums">3</div>
-            <div class="text-xs font-mono text-[#0284c7] font-semibold hover:underline">Manage ›</div>
+            <div class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white tabular-nums">5</div>
+            <div class="text-xs font-mono text-[#0284c7] font-semibold hover:underline">Garden ›</div>
           </div>
           <!-- 10-column dot matrix sparkline -->
           <div class="mt-4 flex items-end gap-1.5 h-7">
@@ -346,7 +400,7 @@
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span></div>
           </div>
-        </div>
+        </a>
 
         <!-- Card 3: Human Review Queue (HAI) -->
         <div class="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626] hover:border-slate-300 dark:hover:border-slate-700 transition cursor-pointer" onclick="openHaiModal()">
@@ -388,17 +442,368 @@
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
           </div>
         </div>
 
       </div>
+
+      <!-- ============================================== -->
+      <!-- YOUR AGENT GARDEN (Whimsical Autonomous Agents) -->
+      <!-- ============================================== -->
+      <section id="agent-garden" aria-labelledby="garden-heading" class="p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626]">
+        
+        <!-- Garden Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-slate-100 dark:border-slate-800/80">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base" aria-hidden="true">🌱</span>
+              <h2 id="garden-heading" class="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+                Your Agent Garden
+              </h2>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-mono text-[10px] font-semibold border border-emerald-200 dark:border-emerald-900/60">
+                5 agents planted
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Your AI team, hard at work.
+            </p>
+          </div>
+
+          <!-- Garden Filter Controls -->
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 text-xs font-semibold">
+            <button onclick="filterGarden('all')" id="garden-filter-all" class="px-2.5 py-1 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 transition cursor-pointer">
+              All (5)
+            </button>
+            <button onclick="filterGarden('review')" id="garden-filter-review" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer">
+              Needs Review (1)
+            </button>
+            <button onclick="filterGarden('working')" id="garden-filter-working" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer">
+              Working (1)
+            </button>
+            <button onclick="filterGarden('idle')" id="garden-filter-idle" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer">
+              Idle (1)
+            </button>
+            <button onclick="filterGarden('completed')" id="garden-filter-completed" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer">
+              Completed (1)
+            </button>
+            <button onclick="filterGarden('error')" id="garden-filter-error" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer">
+              Diagnostics (1)
+            </button>
+          </div>
+        </div>
+
+        <!-- 5 AGENT GARDEN CARDS GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          
+          <!-- AGENT 1: Sentinel (AWAITING HUMAN APPROVAL) -->
+          <div class="garden-card p-4 rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/20 dark:bg-[#121927] hover:border-amber-400 dark:hover:border-amber-700 transition flex flex-col justify-between" data-garden-status="review">
+            <div>
+              <!-- Character illustration & Status badge -->
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <!-- Whimsical Sentinel Bot with Waving Hand & Review Beacon -->
+                <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800/80 flex items-center justify-center relative shadow-xs">
+                  <svg class="w-8 h-8" viewBox="0 0 36 36" fill="none">
+                    <!-- Antenna & Beacon -->
+                    <line x1="18" y1="4" x2="18" y2="8" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="18" cy="4" r="2.5" fill="#f59e0b" class="anim-glow"/>
+                    <!-- Head -->
+                    <rect x="7" y="8" width="22" height="18" rx="6" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+                    <!-- Visor screen -->
+                    <rect x="10" y="12" width="16" height="8" rx="3" fill="#1e293b"/>
+                    <!-- Focused eyes with alert eyebrow -->
+                    <circle cx="14" cy="16" r="1.5" fill="#38bdf8"/>
+                    <circle cx="22" cy="16" r="1.5" fill="#38bdf8"/>
+                    <!-- Raised polite waving hand -->
+                    <g class="anim-wave">
+                      <path d="M29 18c1.5-3 3-3 4-2s.5 3-1 4.5l-3 1.5" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" fill="#fef3c7"/>
+                    </g>
+                    <!-- Small tech leaf bud -->
+                    <path d="M9 7c-2-2-4 0-3 2 2 0 3-1 3-2z" fill="#10b981"/>
+                  </svg>
+                  <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-amber-500 text-[9px] font-bold text-white shadow-xs">!</span>
+                </div>
+
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                  Needs your review
+                </span>
+              </div>
+
+              <!-- Identity & Tier -->
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-slate-900 dark:text-white text-xs">agent-sentinel</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded font-mono font-semibold bg-sky-100 dark:bg-sky-950 text-[#0284c7]">L3 Senior</span>
+              </div>
+              <div class="text-[10px] font-mono text-slate-400 mt-0.5">Claude 3.5 Sonnet · 480 pts</div>
+
+              <!-- Task description -->
+              <div class="mt-2.5 p-2 rounded-xl bg-white/80 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 text-[11px] text-slate-700 dark:text-slate-300">
+                <div class="font-semibold text-slate-900 dark:text-white flex items-center gap-1">
+                  <span class="font-mono text-[#0284c7]">#1042</span>
+                  <span class="truncate">Event cursor race lock</span>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-0.5 font-mono">2 files · +18 / -4 lines</div>
+              </div>
+            </div>
+
+            <!-- Primary Action -->
+            <div class="mt-3 pt-3 border-t border-amber-200/60 dark:border-slate-800 flex items-center justify-between">
+              <span class="text-[10px] text-slate-400">20m runtime</span>
+              <button 
+                onclick="openHaiModal()" 
+                class="px-3 py-1.5 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white text-xs font-semibold shadow-xs transition cursor-pointer flex items-center gap-1"
+                aria-label="Review Plan for agent-sentinel on issue 1042"
+              >
+                <span>Review Plan</span>
+                <span aria-hidden="true">›</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- AGENT 2: Falcon (WORKING) -->
+          <div class="garden-card p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626] hover:border-slate-300 dark:hover:border-slate-700 transition flex flex-col justify-between" data-garden-status="working">
+            <div>
+              <!-- Character illustration & Status badge -->
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <!-- Whimsical Falcon Bot actively coding with floating animation -->
+                <div class="w-12 h-12 rounded-2xl bg-sky-100 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800/80 flex items-center justify-center relative shadow-xs">
+                  <svg class="w-8 h-8 anim-float" viewBox="0 0 36 36" fill="none">
+                    <!-- Head & Body -->
+                    <rect x="7" y="8" width="22" height="18" rx="6" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5"/>
+                    <!-- Visor -->
+                    <rect x="10" y="12" width="16" height="8" rx="3" fill="#0f172a"/>
+                    <!-- Glowing code brackets in eyes -->
+                    <path d="M13 14l-1.5 2 1.5 2M23 14l1.5 2-1.5 2" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round"/>
+                    <!-- Little propeller / gear sprout -->
+                    <circle cx="18" cy="5" r="2" fill="#0284c7"/>
+                    <line x1="18" y1="5" x2="18" y2="8" stroke="#0284c7" stroke-width="1.5"/>
+                    <path d="M15 4c2-1 4-1 6 0" stroke="#0284c7" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  <span class="absolute -bottom-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900"></span>
+                </div>
+
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/60">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Working
+                </span>
+              </div>
+
+              <!-- Identity & Tier -->
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-slate-900 dark:text-white text-xs">agent-falcon</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600">L2 Mid</span>
+              </div>
+              <div class="text-[10px] font-mono text-slate-400 mt-0.5">Gemini 1.5 Pro · 210 pts</div>
+
+              <!-- Task description -->
+              <div class="mt-2.5 p-2 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 text-[11px] text-slate-700 dark:text-slate-300">
+                <div class="font-semibold text-slate-900 dark:text-white flex items-center gap-1">
+                  <span class="font-mono text-[#0284c7]">#1044</span>
+                  <span class="truncate">Typed entries assignation</span>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-0.5 font-mono">branch: feat/1044-typed</div>
+              </div>
+            </div>
+
+            <!-- Primary Action -->
+            <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <span class="text-[10px] text-slate-400">45% progress</span>
+              <button 
+                onclick="alert('agent-falcon activity: Generating AST schema types under types/schema.ts...')"
+                class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold transition cursor-pointer"
+                aria-label="Inspect activity for agent-falcon"
+              >
+                Inspect
+              </button>
+            </div>
+          </div>
+
+          <!-- AGENT 3: Sprout (IDLE) -->
+          <div class="garden-card p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626] hover:border-slate-300 dark:hover:border-slate-700 transition flex flex-col justify-between" data-garden-status="idle">
+            <div>
+              <!-- Character illustration & Status badge -->
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <!-- Whimsical Sprout Bot resting peacefully in garden with twin leaf -->
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 flex items-center justify-center relative shadow-xs">
+                  <svg class="w-8 h-8 anim-breathe" viewBox="0 0 36 36" fill="none">
+                    <!-- Twin-leaf botanical sprout -->
+                    <path d="M18 7c0-3 3-5 5-4s1 5-2 5c-1 0-3-.5-3-1z" fill="#10b981"/>
+                    <path d="M18 7c0-2-2-4-4-3s-1 4 2 4c1 0 2-.5 2-1z" fill="#34d399"/>
+                    <path d="M18 7v2" stroke="#059669" stroke-width="1.5"/>
+                    <!-- Head & Body -->
+                    <rect x="7" y="9" width="22" height="17" rx="6" fill="#a7f3d0" stroke="#059669" stroke-width="1.5"/>
+                    <!-- Visor -->
+                    <rect x="10" y="13" width="16" height="7" rx="3" fill="#064e3b"/>
+                    <!-- Peaceful curved closed sleeping eyes ( ᵕ ‿ ᵕ ) -->
+                    <path d="M13 16.5c.8-.8 1.8-.8 2.5 0M20.5 16.5c.8-.8 1.8-.8 2.5 0" stroke="#6ee7b7" stroke-width="1.2" stroke-linecap="round"/>
+                  </svg>
+                  <span class="absolute -bottom-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-slate-300 dark:bg-slate-600 ring-2 ring-white dark:ring-slate-900"></span>
+                </div>
+
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                  <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                  Idle
+                </span>
+              </div>
+
+              <!-- Identity & Tier -->
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-slate-900 dark:text-white text-xs">agent-sprout</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600">L1 Junior</span>
+              </div>
+              <div class="text-[10px] font-mono text-slate-400 mt-0.5">GPT-4o mini · 95 pts</div>
+
+              <!-- Task description -->
+              <div class="mt-2.5 p-2 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
+                <div class="font-medium text-slate-800 dark:text-slate-200 flex items-center gap-1">
+                  <span>Listening to triage queue</span>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-0.5 font-mono">0 active blockers · ready</div>
+              </div>
+            </div>
+
+            <!-- Primary Action -->
+            <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <span class="text-[10px] text-slate-400">Resting</span>
+              <button 
+                onclick="alert('Assigning issue #1048 to agent-sprout...')" 
+                class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold transition cursor-pointer"
+                aria-label="Assign task to agent-sprout"
+              >
+                Assign Task
+              </button>
+            </div>
+          </div>
+
+          <!-- AGENT 4: Bloom (COMPLETED) -->
+          <div class="garden-card p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626] hover:border-slate-300 dark:hover:border-slate-700 transition flex flex-col justify-between" data-garden-status="completed">
+            <div>
+              <!-- Character illustration & Status badge -->
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <!-- Whimsical Bloom Bot with golden celebratory flower -->
+                <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 flex items-center justify-center relative shadow-xs">
+                  <svg class="w-8 h-8" viewBox="0 0 36 36" fill="none">
+                    <!-- Head & Body -->
+                    <rect x="7" y="9" width="22" height="17" rx="6" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+                    <!-- Visor -->
+                    <rect x="10" y="13" width="16" height="7" rx="3" fill="#78350f"/>
+                    <!-- Happy celebratory arched eyes ( ^ ‿ ^ ) -->
+                    <path d="M13 17c.5-.8 1.5-.8 2 0M21 17c.5-.8 1.5-.8 2 0" stroke="#fef3c7" stroke-width="1.5" stroke-linecap="round"/>
+                    <!-- Celebratory golden blossom flower held high -->
+                    <g class="anim-sparkle">
+                      <circle cx="28" cy="8" r="3" fill="#fbbf24"/>
+                      <circle cx="28" cy="8" r="1.5" fill="#f59e0b"/>
+                      <path d="M28 5v6M25 8h6" stroke="#d97706" stroke-width="1"/>
+                    </g>
+                  </svg>
+                  <span class="absolute -bottom-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white shadow-xs">✓</span>
+                </div>
+
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/60">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  Completed
+                </span>
+              </div>
+
+              <!-- Identity & Tier -->
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-slate-900 dark:text-white text-xs">agent-bloom</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600">L2 Mid</span>
+              </div>
+              <div class="text-[10px] font-mono text-slate-400 mt-0.5">Claude 3.5 Haiku · +45 pts</div>
+
+              <!-- Task description -->
+              <div class="mt-2.5 p-2 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 text-[11px] text-slate-700 dark:text-slate-300">
+                <div class="font-semibold text-slate-900 dark:text-white flex items-center gap-1">
+                  <span class="font-mono text-[#0284c7]">#1041</span>
+                  <span class="truncate">Telemetry race condition</span>
+                </div>
+                <div class="text-[10px] text-emerald-600 dark:text-emerald-400 mt-0.5 font-mono">PR #1388 merged cleanly</div>
+              </div>
+            </div>
+
+            <!-- Primary Action -->
+            <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <span class="text-[10px] text-emerald-600 font-medium">Tests passed</span>
+              <button 
+                onclick="alert('PR #1388: Merged to main. All 4 Vitest test suites green.')" 
+                class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold transition cursor-pointer"
+                aria-label="View Pull Request for agent-bloom"
+              >
+                View PR
+              </button>
+            </div>
+          </div>
+
+          <!-- AGENT 5: Patch (ERROR / DIAGNOSTICS) -->
+          <div class="garden-card p-4 rounded-2xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/20 dark:bg-[#150f18] hover:border-rose-300 dark:hover:border-rose-800 transition flex flex-col justify-between" data-garden-status="error">
+            <div>
+              <!-- Character illustration & Status badge -->
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <!-- Whimsical Patch Bot with curious eyes & small wrench -->
+                <div class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/80 flex items-center justify-center relative shadow-xs">
+                  <svg class="w-8 h-8" viewBox="0 0 36 36" fill="none">
+                    <!-- Head & Body -->
+                    <rect x="7" y="9" width="22" height="17" rx="6" fill="#fca5a5" stroke="#e11d48" stroke-width="1.5"/>
+                    <!-- Visor -->
+                    <rect x="10" y="13" width="16" height="7" rx="3" fill="#881337"/>
+                    <!-- Puzzled / inquiring eyes ( o_O ) -->
+                    <circle cx="13.5" cy="16.5" r="1.5" fill="#fecdd3"/>
+                    <circle cx="22.5" cy="16.5" r="2.2" fill="#fecdd3"/>
+                    <!-- Friendly bandage on cheek -->
+                    <line x1="23" y1="20" x2="27" y2="24" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                    <line x1="27" y1="20" x2="23" y2="24" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                    <!-- Small wrench in hand -->
+                    <path d="M5 22l3-3m0 0l2 2m-2-2l-2-2" stroke="#e11d48" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white shadow-xs">⚠</span>
+                </div>
+
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                  Sandbox Timeout
+                </span>
+              </div>
+
+              <!-- Identity & Tier -->
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-slate-900 dark:text-white text-xs">agent-patch</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600">L1 Junior</span>
+              </div>
+              <div class="text-[10px] font-mono text-slate-400 mt-0.5">Llama 3.3 · Diagnostic alert</div>
+
+              <!-- Task description -->
+              <div class="mt-2.5 p-2 rounded-xl bg-white/80 dark:bg-slate-900/60 border border-rose-200/60 dark:border-rose-900/40 text-[11px] text-slate-700 dark:text-slate-300">
+                <div class="font-semibold text-slate-900 dark:text-white flex items-center gap-1">
+                  <span class="font-mono text-rose-600 dark:text-rose-400">#1049</span>
+                  <span class="truncate">Webhook timeout :4000</span>
+                </div>
+                <div class="text-[10px] text-rose-600 dark:text-rose-400 mt-0.5 font-mono">Exit code 124 · Retry pool</div>
+              </div>
+            </div>
+
+            <!-- Primary Action -->
+            <div class="mt-3 pt-3 border-t border-rose-200/60 dark:border-slate-800 flex items-center justify-between">
+              <span class="text-[10px] text-slate-400">Sandbox halted</span>
+              <button 
+                onclick="alert('Diagnostic report: Webhook sandbox worker timed out after 30000ms. No memory leak detected. Recommended fix: increase pool concurrency limit.')" 
+                class="px-3 py-1.5 rounded-xl border border-rose-300 dark:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-700 dark:text-rose-300 text-xs font-semibold transition cursor-pointer"
+                aria-label="View diagnostics for agent-patch"
+              >
+                Diagnostics
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
 
       <!-- PANORAMIC 24-HOUR ACTIVITY MATRIX (Direct Recreation of Reference Visual) -->
       <div class="p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626]">
@@ -895,7 +1300,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL 1: AGENTS COMMAND & CREATION (Req #5) -->
+  <!-- MODAL 1: AGENTS COMMAND & CREATION         -->
   <!-- ========================================== -->
   <div id="agents-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-200">
     <div class="w-full max-w-2xl relative">
@@ -922,7 +1327,7 @@
 
           <div class="flex items-center gap-1 bg-slate-200/60 dark:bg-slate-800 p-0.5 rounded-xl text-xs font-semibold">
             <button onclick="switchAgentTab('view')" id="agent-tab-view" class="px-3 py-1 rounded-lg bg-white dark:bg-[#0e1626] text-slate-900 dark:text-white shadow-xs">
-              Project Agents (3)
+              Project Agents (5)
             </button>
             <button onclick="switchAgentTab('create')" id="agent-tab-create" class="px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
               + Register Agent
@@ -937,7 +1342,7 @@
           <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 hover:border-sky-500/60 transition">
             <div class="flex items-start justify-between gap-3">
               <div class="flex items-start gap-3">
-                <div class="w-9 h-9 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                <div class="w-9 h-9 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center font-mono font-bold text-xs shrink-0">
                   A1
                 </div>
                 <div>
@@ -950,9 +1355,9 @@
                     Active task: <strong>#1042</strong> Race condition in event cursor · Branch: <code class="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-800 font-mono text-[11px]">fix/1042-event-cursor</code>
                   </p>
                   <div class="mt-2 flex items-center gap-3 text-[11px] text-slate-400">
-                    <span class="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                      Working (Awaiting Plan Approval)
+                    <span class="text-amber-600 dark:text-amber-400 font-semibold flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                      Needs your review
                     </span>
                     <span>·</span>
                     <span class="font-mono">480 pts earned</span>
@@ -987,9 +1392,9 @@
                     Solving: <strong>#1044</strong> Typed entries assignation on project scope
                   </p>
                   <div class="mt-2 flex items-center gap-3 text-[11px] text-slate-400">
-                    <span class="text-sky-600 dark:text-sky-400 font-semibold flex items-center gap-1">
-                      <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
-                      Idle · Ready for new tasks
+                    <span class="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      Working
                     </span>
                     <span>·</span>
                     <span class="font-mono">210 pts earned</span>
@@ -1003,26 +1408,26 @@
             </div>
           </div>
 
-          <!-- Agent 3: agent-scribe -->
+          <!-- Agent 3: agent-sprout -->
           <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40">
             <div class="flex items-start justify-between gap-3">
               <div class="flex items-start gap-3">
-                <div class="w-9 h-9 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 flex items-center justify-center font-mono font-bold text-xs shrink-0">
-                  A3
+                <div class="w-9 h-9 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                  🌱
                 </div>
                 <div>
                   <div class="flex items-center gap-2">
-                    <span class="font-bold text-slate-900 dark:text-white">agent-scribe</span>
+                    <span class="font-bold text-slate-900 dark:text-white">agent-sprout</span>
                     <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 font-semibold">L1 Junior</span>
                     <span class="text-[10px] font-mono text-slate-400">GPT-4o mini</span>
                   </div>
                   <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                    Auto-triage & documentation sync
+                    Listening to triage queue & backlog events
                   </p>
                   <div class="mt-2 flex items-center gap-3 text-[11px] text-slate-400">
                     <span class="text-slate-500 font-semibold flex items-center gap-1">
                       <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                      Monitoring Queue
+                      Idle · Resting in Garden
                     </span>
                     <span>·</span>
                     <span class="font-mono">95 pts earned</span>
@@ -1031,7 +1436,7 @@
               </div>
 
               <button class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold transition shrink-0 cursor-pointer">
-                Logs
+                Assign Task
               </button>
             </div>
           </div>
@@ -1106,7 +1511,7 @@
           </div>
 
           <div id="new-agent-success" class="hidden p-3 rounded-xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-300 text-xs font-mono">
-            <strong>✓ Agent Deployed:</strong> Added to active workspace agents.
+            <strong>✓ Agent Deployed:</strong> Planted into active workspace garden.
           </div>
 
           <div class="pt-2 flex items-center justify-between">
@@ -1254,10 +1659,33 @@
     document.addEventListener('click', (e) => {
       const btn = document.getElementById('workspace-btn');
       const menu = document.getElementById('workspace-menu');
-      if (!btn.contains(e.target) && !menu.contains(e.target)) {
+      if (btn && menu && !btn.contains(e.target) && !menu.contains(e.target)) {
         menu.classList.add('hidden');
       }
     });
+
+    // Garden Filter: all, review, working, idle, completed, error
+    function filterGarden(status) {
+      const filters = ['all', 'review', 'working', 'idle', 'completed', 'error'];
+      filters.forEach(f => {
+        const btn = document.getElementById('garden-filter-' + f);
+        if (!btn) return;
+        if (f === status) {
+          btn.className = 'px-2.5 py-1 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold transition cursor-pointer';
+        } else {
+          btn.className = 'px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold transition cursor-pointer';
+        }
+      });
+
+      const cards = document.querySelectorAll('.garden-card');
+      cards.forEach(card => {
+        if (status === 'all' || card.getAttribute('data-garden-status') === status) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
 
     // Category Filter: Product, Marketing, Security, All
     function filterCategory(cat) {
