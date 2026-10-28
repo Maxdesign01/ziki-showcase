@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ziki — Front Desk & Autonomous Issue Command</title>
+  <title>Ziki — Autonomous Issue Tracker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -71,66 +71,190 @@
   <!-- FLOATING PANORAMIC DASHBOARD CONTAINER (Matches Reference Layout) -->
   <div class="max-w-[1480px] mx-auto bg-white dark:bg-[#0c1220] rounded-[28px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.06)] border border-slate-200/90 dark:border-slate-800/90 overflow-hidden">
     
-    <!-- TOP NAVIGATION BAR -->
-    <header class="px-6 py-4 border-b border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-4">
+    <!-- TOP NAVIGATION BAR (Exact replica of real Ziki header from reference screenshot) -->
+    <header class="px-6 py-3.5 border-b border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-4">
       
-      <!-- Brand & Breadcrumbs -->
+      <!-- Brand, Custom Logo Support, Workspace Switcher & Navigation Links -->
       <div class="flex items-center gap-6">
+        
+        <!-- Logo Area with custom logo drop-in support -->
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-[#0284c7] flex items-center justify-center text-white shadow-md shadow-sky-500/20">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="font-bold text-base tracking-tight text-slate-900 dark:text-white">Ziki</span>
-              <span class="text-[10px] font-mono font-semibold uppercase px-1.5 py-0.5 rounded bg-sky-50 dark:bg-sky-950/60 text-[#0284c7] border border-sky-100 dark:border-sky-900/40">Issue OS</span>
+          <a href="#" class="flex items-center gap-2 group">
+            <!-- Priority 1: User's custom dropped logo (logo.png or logo.svg) -->
+            <!-- Priority 2: Copied ziki-logo.png -->
+            <!-- Priority 3: Inline crisp SVG vector fallback -->
+            <img 
+              id="brand-logo" 
+              src="logo.png" 
+              alt="Logo" 
+              class="h-7 w-auto object-contain" 
+              onerror="this.onerror=null; this.src='logo.svg'; this.onerror=function(){ this.src='ziki-logo.png'; this.onerror=function(){ this.style.display='none'; document.getElementById('vector-logo').classList.remove('hidden'); }; };"
+            />
+            
+            <div id="vector-logo" class="hidden flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-[#0284c7] flex items-center justify-center text-white font-bold text-sm shadow-xs">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <span class="font-bold text-base tracking-tight text-slate-900 dark:text-white">ziki</span>
             </div>
-            <div class="text-[11px] text-slate-400 font-medium -mt-0.5">Team Zendor · Zedu Platform</div>
+          </a>
+
+          <!-- Vertical Divider -->
+          <div class="h-5 w-px bg-slate-200 dark:bg-slate-700"></div>
+
+          <!-- WORKSPACE SWITCHER DROPDOWN (Matches Real Ziki) -->
+          <div class="relative">
+            <button 
+              id="workspace-btn"
+              onclick="toggleWorkspaceDropdown()"
+              class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold text-slate-800 dark:text-slate-200 transition cursor-pointer"
+            >
+              <span id="current-workspace-name">Ziki</span>
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div 
+              id="workspace-menu" 
+              class="hidden absolute left-0 top-9 z-50 w-52 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0e1626] p-1.5 shadow-xl text-xs font-medium"
+            >
+              <div class="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Workspaces</div>
+              <button onclick="selectWorkspace('Ziki')" class="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-left hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-semibold">
+                <span>Ziki (Default)</span>
+                <span class="text-[#0284c7]">✓</span>
+              </button>
+              <button onclick="selectWorkspace('Zedu Web')" class="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-left hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300">
+                <span>Zedu Web</span>
+              </button>
+              <button onclick="selectWorkspace('Team Zendor')" class="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-left hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300">
+                <span>Team Zendor</span>
+              </button>
+              <button onclick="selectWorkspace('Start.ng')" class="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-left hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300">
+                <span>Start.ng</span>
+              </button>
+              <div class="my-1 border-t border-slate-100 dark:border-slate-800"></div>
+              <button onclick="alert('Workspace invitation or creation modal')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-left hover:bg-slate-50 dark:hover:bg-slate-800 text-[#0284c7] font-semibold">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                <span>Switch or join workspace</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Horizontal Nav Tabs -->
-        <nav class="hidden md:flex items-center gap-1 pl-4 border-l border-slate-100 dark:border-slate-800 text-xs font-semibold">
-          <a href="#" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white transition">Dashboard</a>
-          <a href="#issues" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition">Issues</a>
-          <a href="javascript:void(0)" onclick="openModal()" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition flex items-center gap-1.5">
-            <span>Agent Review (HAI)</span>
-            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-          </a>
-          <a href="#leaderboard" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition">Points</a>
+        <!-- Real Ziki Navigation Tabs (Product, Marketing, Security) -->
+        <nav class="hidden md:flex items-center gap-1 pl-2 border-l border-slate-100 dark:border-slate-800 text-xs font-semibold">
+          <button 
+            onclick="filterCategory('all')" 
+            id="tab-all"
+            class="px-3 py-1.5 rounded-lg text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 transition cursor-pointer"
+          >
+            All
+          </button>
+          
+          <button 
+            onclick="filterCategory('product')" 
+            id="tab-product"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition cursor-pointer"
+          >
+            <!-- Target / Product icon -->
+            <svg class="w-3.5 h-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="6" />
+              <circle cx="12" cy="12" r="2" />
+            </svg>
+            <span>Product</span>
+          </button>
+
+          <button 
+            onclick="filterCategory('marketing')" 
+            id="tab-marketing"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition cursor-pointer"
+          >
+            <!-- Megaphone / Marketing icon -->
+            <svg class="w-3.5 h-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+            </svg>
+            <span>Marketing</span>
+          </button>
+
+          <button 
+            onclick="filterCategory('security')" 
+            id="tab-security"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition cursor-pointer"
+          >
+            <!-- Shield / Security icon -->
+            <svg class="w-3.5 h-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <span>Security</span>
+          </button>
         </nav>
       </div>
 
-      <!-- Top Right Actions & Controls -->
-      <div class="flex items-center gap-3">
-        <!-- Date Selector Pill -->
-        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 text-xs font-medium text-slate-700 dark:text-slate-300">
-          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      <!-- Right Controls: Agents Menu, Profile, Real Points Pill, Notification Bell -->
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        
+        <!-- AGENTS PILL BUTTON (Exact replica of real Ziki in screenshot) -->
+        <button 
+          onclick="openAgentsModal()" 
+          class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold shadow-xs transition cursor-pointer"
+        >
+          <svg class="w-4 h-4 text-[#0284c7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="8" width="16" height="12" rx="2" />
+            <path d="M12 4v4" />
+            <path d="M9 14h.01" />
+            <path d="M15 14h.01" />
           </svg>
-          <span>Oct 27, 2026 · Live sync</span>
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Agents</span>
+          <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- USER PROFILE PILL (Purple C + Chukwu Sunday ⌵) -->
+        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold shadow-xs transition cursor-pointer">
+          <div class="w-5 h-5 rounded-full bg-[#6b21a8] text-white flex items-center justify-center font-bold text-[10px]">
+            C
+          </div>
+          <span class="hidden sm:inline">Chukwu Sunday</span>
+          <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
 
-        <!-- Search Bar with ⌘K -->
-        <div class="relative hidden lg:block">
-          <svg class="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        <!-- REAL ZIKI POINTS BADGE (Warm amber gold pill: 🏆 5479 pts) -->
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#fef3c7] dark:bg-amber-950/60 border border-[#fde68a] dark:border-amber-800/80 text-[#92400e] dark:text-amber-300 font-bold text-xs shadow-xs">
+          <svg class="w-4 h-4 text-[#d97706]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+            <path d="M4 22h16" />
+            <path d="M10 14.7V17c0 .6-.5 1-1 1.2-1.2.5-2 2-2 3.8" />
+            <path d="M14 14.7V17c0 .6.5 1 1 1.2 1.2.5 2 2 2 3.8" />
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
           </svg>
-          <input 
-            type="text" 
-            placeholder="Search issues, agents (⌘K)..." 
-            class="pl-8 pr-10 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-[#0284c7] w-60 transition"
-          />
+          <span class="tabular-nums">5479 pts</span>
         </div>
+
+        <!-- NOTIFICATION BELL ICON WITH BLUE BADGE 5 -->
+        <button class="relative p-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition cursor-pointer">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+          </svg>
+          <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#0284c7] text-[10px] font-bold text-white ring-2 ring-white dark:ring-slate-900">
+            5
+          </span>
+        </button>
 
         <!-- Theme Toggle -->
         <button 
           onclick="document.documentElement.classList.toggle('dark')"
           aria-label="Toggle theme"
-          class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition cursor-pointer"
+          class="p-2 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition cursor-pointer"
         >
           <svg class="w-4 h-4 hidden dark:block text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -140,43 +264,29 @@
           </svg>
         </button>
 
-        <!-- Primary CTA: Review Plan (HAI) -->
-        <button 
-          onclick="openModal()" 
-          class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white text-xs font-semibold shadow-sm shadow-sky-600/20 transition cursor-pointer"
-        >
-          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>Review Agent Plan</span>
-        </button>
-
-        <!-- User Profile Pill -->
-        <div class="w-8 h-8 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center font-bold text-xs ring-2 ring-slate-100 dark:ring-slate-800 cursor-pointer">
-          M
-        </div>
       </div>
     </header>
 
     <!-- MAIN BODY -->
     <main class="p-6 sm:p-8 space-y-6">
       
-      <!-- HERO TITLE & METRIC SUMMARY -->
+      <!-- HERO TITLE: Welcome back, Chukwu (Req #2) -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Workspace Front Desk & Queue
+            Welcome back, Chukwu
           </h1>
           <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            48 issues in triage · 3 autonomous agents deployed · 1 proposal awaiting human review.
+            Wednesday, October 28 · 48 issues in triage · 3 autonomous agents deployed in workspace.
           </p>
         </div>
 
         <div class="flex items-center gap-2">
-          <button class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
-            Export Report
+          <button onclick="openAgentsModal()" class="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition flex items-center gap-1.5 cursor-pointer">
+            <svg class="w-3.5 h-3.5 text-[#0284c7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="8" width="16" height="12" rx="2" /><path d="M12 4v4" /><path d="M9 14h.01" /><path d="M15 14h.01" /></svg>
+            <span>View Agents</span>
           </button>
-          <button class="px-3.5 py-1.5 rounded-xl bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-white text-white dark:text-slate-900 text-xs font-semibold shadow-xs transition">
+          <button class="px-3.5 py-1.5 rounded-xl bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-white text-white dark:text-slate-900 text-xs font-semibold shadow-xs transition cursor-pointer">
             + New Issue
           </button>
         </div>
@@ -200,18 +310,18 @@
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
           </div>
         </div>
 
         <!-- Card 2: Autonomous Agents -->
-        <div class="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626] hover:border-slate-300 dark:hover:border-slate-700 transition">
+        <div onclick="openAgentsModal()" class="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626] hover:border-slate-300 dark:hover:border-slate-700 transition cursor-pointer">
           <div class="flex items-center justify-between text-xs font-medium text-slate-500 dark:text-slate-400">
             <span class="uppercase tracking-wider text-[11px] font-semibold">Autonomous Agents</span>
             <span class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold text-[11px]">
@@ -221,25 +331,25 @@
           </div>
           <div class="mt-3 flex items-baseline justify-between">
             <div class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white tabular-nums">3</div>
-            <div class="text-xs font-mono text-slate-400">Deployed</div>
+            <div class="text-xs font-mono text-[#0284c7] font-semibold hover:underline">Manage ›</div>
           </div>
           <!-- 10-column dot matrix sparkline -->
           <div class="mt-4 flex items-end gap-1.5 h-7">
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span><span class="dot dot-active-emerald"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-emerald"></span></div>
           </div>
         </div>
 
         <!-- Card 3: Human Review Queue (HAI) -->
-        <div class="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626] hover:border-slate-300 dark:hover:border-slate-700 transition cursor-pointer" onclick="openModal()">
+        <div class="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0e1626] hover:border-slate-300 dark:hover:border-slate-700 transition cursor-pointer" onclick="openHaiModal()">
           <div class="flex items-center justify-between text-xs font-medium text-slate-500 dark:text-slate-400">
             <span class="uppercase tracking-wider text-[11px] font-semibold">Human Review Queue</span>
             <span class="text-amber-600 dark:text-amber-400 font-semibold text-[11px]">Action required</span>
@@ -252,14 +362,14 @@
           <div class="mt-4 flex items-end gap-1.5 h-7">
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span><span class="dot dot-active-amber"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-amber"></span></div>
           </div>
         </div>
 
@@ -276,15 +386,15 @@
           <!-- 10-column dot matrix sparkline -->
           <div class="mt-4 flex items-end gap-1.5 h-7">
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
             <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
-            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
+            <div class="flex-1 flex flex-col gap-1 justify-end"><span class="dot dot-active-blue"></span><span class="dot dot-active-blue"></span></div>
           </div>
         </div>
 
@@ -317,7 +427,6 @@
         <!-- 24-Hour Dot Matrix Grid -->
         <div class="grid grid-cols-12 sm:grid-cols-24 gap-1 sm:gap-2 items-end pt-2 pb-2">
           
-          <!-- Helper macro: 24 columns representing hours 00 through 23 -->
           <!-- 00 -->
           <div class="flex flex-col items-center gap-1.5">
             <div class="flex flex-col gap-1 justify-end h-28">
@@ -496,19 +605,19 @@
         <!-- Table Header & Filter Tabs -->
         <div class="p-5 border-b border-slate-100 dark:border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="flex items-center gap-4 text-xs font-semibold overflow-x-auto pb-1 md:pb-0">
-            <button class="pb-2 border-b-2 border-slate-900 dark:border-white text-slate-900 dark:text-white flex items-center gap-1.5 cursor-pointer">
+            <button onclick="filterTableStatus('all')" id="status-all" class="pb-2 border-b-2 border-slate-900 dark:border-white text-slate-900 dark:text-white flex items-center gap-1.5 cursor-pointer">
               <span>All Active</span>
               <span class="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-mono">48</span>
             </button>
-            <button class="pb-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 flex items-center gap-1.5 cursor-pointer transition">
+            <button onclick="filterTableStatus('assigned')" id="status-assigned" class="pb-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 flex items-center gap-1.5 cursor-pointer transition">
               <span>Assigned to Me</span>
               <span class="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-mono">8</span>
             </button>
-            <button class="pb-2 text-[#0284c7] font-bold flex items-center gap-1.5 cursor-pointer transition">
+            <button onclick="filterTableStatus('review')" id="status-review" class="pb-2 text-[#0284c7] font-bold flex items-center gap-1.5 cursor-pointer transition">
               <span>Needs Review</span>
               <span class="px-1.5 py-0.2 rounded-full bg-sky-100 dark:bg-sky-950 text-[#0284c7] text-[10px] font-mono">1</span>
             </button>
-            <button class="pb-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 flex items-center gap-1.5 cursor-pointer transition">
+            <button onclick="filterTableStatus('resolved')" id="status-resolved" class="pb-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 flex items-center gap-1.5 cursor-pointer transition">
               <span>Resolved</span>
               <span class="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-mono">24</span>
             </button>
@@ -521,28 +630,29 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <input 
+                id="search-input"
+                onkeyup="searchTable()"
                 type="text" 
                 placeholder="Filter table..." 
                 class="pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-[#0284c7] w-48 sm:w-56 transition"
               />
             </div>
-            <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs text-slate-700 dark:text-slate-300 transition">
-              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-              <span>Filter</span>
+            <button onclick="openAgentsModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs text-slate-700 dark:text-slate-300 transition cursor-pointer">
+              <svg class="w-3.5 h-3.5 text-[#0284c7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="8" width="16" height="12" rx="2" /><path d="M12 4v4" /><path d="M9 14h.01" /><path d="M15 14h.01" /></svg>
+              <span>Agents</span>
             </button>
           </div>
         </div>
 
         <!-- Table View -->
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
+          <table class="w-full text-left text-xs" id="issues-table">
             <thead>
               <tr class="text-[11px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/40 dark:bg-slate-900/20">
                 <th class="py-3 px-5 font-semibold">Ref</th>
                 <th class="py-3 px-4 font-semibold">Issue Title & Subsystem</th>
                 <th class="py-3 px-4 font-semibold">Assignee / Agent</th>
+                <th class="py-3 px-4 font-semibold">Category</th>
                 <th class="py-3 px-4 font-semibold">Severity</th>
                 <th class="py-3 px-4 font-semibold">Stage</th>
                 <th class="py-3 px-4 font-semibold">Bounty</th>
@@ -552,7 +662,7 @@
             <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 text-slate-700 dark:text-slate-300">
               
               <!-- Row 1: THE CORE HAI AGENT PLAN ROW (#1042) -->
-              <tr class="hover:bg-sky-50/40 dark:hover:bg-sky-950/20 transition group">
+              <tr class="hover:bg-sky-50/40 dark:hover:bg-sky-950/20 transition group issue-row" data-category="product" data-status="review">
                 <td class="py-4 px-5 whitespace-nowrap">
                   <span class="font-mono font-bold text-slate-900 dark:text-white">#1042</span>
                   <div class="text-[10px] text-slate-400">3h ago</div>
@@ -578,6 +688,11 @@
                   </div>
                 </td>
                 <td class="py-4 px-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
+                    Product
+                  </span>
+                </td>
+                <td class="py-4 px-4 whitespace-nowrap">
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/60">
                     <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                     High
@@ -594,7 +709,7 @@
                 </td>
                 <td class="py-4 px-5 text-right whitespace-nowrap">
                   <button 
-                    onclick="openModal()" 
+                    onclick="openHaiModal()" 
                     class="px-3.5 py-1.5 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white text-xs font-semibold shadow-xs transition cursor-pointer"
                   >
                     Review Plan (HAI)
@@ -603,7 +718,7 @@
               </tr>
 
               <!-- Row 2: Typed entries (#1044) -->
-              <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-900/40 transition">
+              <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-900/40 transition issue-row" data-category="product" data-status="assigned">
                 <td class="py-4 px-5 whitespace-nowrap">
                   <span class="font-mono font-bold text-slate-900 dark:text-white">#1044</span>
                   <div class="text-[10px] text-slate-400">5h ago</div>
@@ -629,6 +744,11 @@
                   </div>
                 </td>
                 <td class="py-4 px-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
+                    Product
+                  </span>
+                </td>
+                <td class="py-4 px-4 whitespace-nowrap">
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-900/60">
                     <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                     Medium
@@ -650,8 +770,8 @@
                 </td>
               </tr>
 
-              <!-- Row 3: Webhook retry pool (#1045) -->
-              <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-900/40 transition">
+              <!-- Row 3: Security Webhook retry pool (#1045) -->
+              <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-900/40 transition issue-row" data-category="security" data-status="assigned">
                 <td class="py-4 px-5 whitespace-nowrap">
                   <span class="font-mono font-bold text-slate-900 dark:text-white">#1045</span>
                   <div class="text-[10px] text-slate-400">1d ago</div>
@@ -677,6 +797,11 @@
                   </div>
                 </td>
                 <td class="py-4 px-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900">
+                    Security
+                  </span>
+                </td>
+                <td class="py-4 px-4 whitespace-nowrap">
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/60">
                     <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                     Critical
@@ -698,48 +823,53 @@
                 </td>
               </tr>
 
-              <!-- Row 4: Design viewport reflow (#1048) -->
-              <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-900/40 transition">
+              <!-- Row 4: Marketing Design viewport reflow (#1048) -->
+              <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-900/40 transition issue-row" data-category="marketing" data-status="assigned">
                 <td class="py-4 px-5 whitespace-nowrap">
                   <span class="font-mono font-bold text-slate-900 dark:text-white">#1048</span>
                   <div class="text-[10px] text-slate-400">2d ago</div>
                 </td>
                 <td class="py-4 px-4 max-w-sm">
                   <div class="font-semibold text-slate-900 dark:text-white text-xs leading-snug">
-                    Mobile viewport typography scale and badge truncation
+                    Dynamic OpenGraph social cards and marketing page mobile viewport
                   </div>
                   <div class="flex items-center gap-2 mt-1">
-                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono">ui / responsive</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono">marketing / growth</span>
                     <span class="text-[10px] text-slate-400">6 votes</span>
                   </div>
                 </td>
                 <td class="py-4 px-4 whitespace-nowrap">
                   <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center font-bold text-[10px]">
-                      --
+                    <div class="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 flex items-center justify-center font-bold text-[10px]">
+                      MK
                     </div>
                     <div>
-                      <div class="font-semibold text-slate-500">Unassigned</div>
-                      <div class="text-[10px] text-slate-400">Available bounty</div>
+                      <div class="font-semibold text-slate-800 dark:text-slate-200">Marketing Lead</div>
+                      <div class="text-[10px] text-slate-400">Open product fix</div>
                     </div>
                   </div>
                 </td>
                 <td class="py-4 px-4 whitespace-nowrap">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                    Low
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900">
+                    Marketing
                   </span>
                 </td>
                 <td class="py-4 px-4 whitespace-nowrap">
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                    Open Bounty
+                    Medium
+                  </span>
+                </td>
+                <td class="py-4 px-4 whitespace-nowrap">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/60">
+                    In Progress
                   </span>
                 </td>
                 <td class="py-4 px-4 whitespace-nowrap font-mono font-bold text-[#0284c7]">
-                  +30 pts
+                  +35 pts
                 </td>
                 <td class="py-4 px-5 text-right whitespace-nowrap">
-                  <button onclick="openModal()" class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold transition cursor-pointer">
-                    Claim Issue
+                  <button class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold transition cursor-pointer">
+                    Inspect
                   </button>
                 </td>
               </tr>
@@ -750,7 +880,7 @@
 
         <!-- Table Pagination & Footer -->
         <div class="p-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-          <div>Showing 4 of 48 total issues in sprint</div>
+          <div id="table-count-text">Showing 4 of 48 total issues in sprint</div>
           <div class="flex items-center gap-2">
             <button class="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40" disabled>Previous</button>
             <span class="px-2 py-1 font-mono font-semibold text-slate-900 dark:text-white">1</span>
@@ -764,11 +894,242 @@
 
   </div>
 
-  <!-- HAI AGENT INTENT & STEERING PROTOCOL (AISP) MODAL -->
+  <!-- ========================================== -->
+  <!-- MODAL 1: AGENTS COMMAND & CREATION (Req #5) -->
+  <!-- ========================================== -->
+  <div id="agents-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-200">
+    <div class="w-full max-w-2xl relative">
+      <button 
+        onclick="closeAgentsModal()"
+        class="absolute -top-10 right-0 text-white/70 hover:text-white text-xs font-mono flex items-center gap-1 cursor-pointer transition"
+      >
+        <span>[Close ESC]</span>
+      </button>
+      
+      <div class="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0b1220] text-slate-900 dark:text-slate-100 shadow-2xl overflow-hidden text-sm">
+        
+        <!-- Header with Tabs -->
+        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-[#080d17] flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-[#0284c7] flex items-center justify-center text-white">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="8" width="16" height="12" rx="2" /><path d="M12 4v4" /><path d="M9 14h.01" /><path d="M15 14h.01" /></svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-sm text-slate-900 dark:text-white">Autonomous Agents</h3>
+              <p class="text-[11px] text-slate-400">Team Zendor AI agents deployed to workspace</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1 bg-slate-200/60 dark:bg-slate-800 p-0.5 rounded-xl text-xs font-semibold">
+            <button onclick="switchAgentTab('view')" id="agent-tab-view" class="px-3 py-1 rounded-lg bg-white dark:bg-[#0e1626] text-slate-900 dark:text-white shadow-xs">
+              Project Agents (3)
+            </button>
+            <button onclick="switchAgentTab('create')" id="agent-tab-create" class="px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+              + Register Agent
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 1: VIEW ACTIVE AGENTS -->
+        <div id="agents-view-panel" class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+          
+          <!-- Agent 1: agent-sentinel -->
+          <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 hover:border-sky-500/60 transition">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                  A1
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-slate-900 dark:text-white">agent-sentinel</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950 text-[#0284c7] font-semibold">L3 Senior</span>
+                    <span class="text-[10px] font-mono text-slate-400">Claude 3.5 Sonnet</span>
+                  </div>
+                  <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                    Active task: <strong>#1042</strong> Race condition in event cursor · Branch: <code class="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-800 font-mono text-[11px]">fix/1042-event-cursor</code>
+                  </p>
+                  <div class="mt-2 flex items-center gap-3 text-[11px] text-slate-400">
+                    <span class="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      Working (Awaiting Plan Approval)
+                    </span>
+                    <span>·</span>
+                    <span class="font-mono">480 pts earned</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Button to view HAI Intent & Plan Review -->
+              <button 
+                onclick="closeAgentsModal(); openHaiModal();" 
+                class="px-3 py-1.5 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white text-xs font-semibold shadow-xs transition shrink-0 cursor-pointer"
+              >
+                Review Plan (HAI)
+              </button>
+            </div>
+          </div>
+
+          <!-- Agent 2: agent-falcon -->
+          <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                  A2
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-slate-900 dark:text-white">agent-falcon</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 font-semibold">L2 Mid</span>
+                    <span class="text-[10px] font-mono text-slate-400">Gemini 1.5 Pro</span>
+                  </div>
+                  <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                    Solving: <strong>#1044</strong> Typed entries assignation on project scope
+                  </p>
+                  <div class="mt-2 flex items-center gap-3 text-[11px] text-slate-400">
+                    <span class="text-sky-600 dark:text-sky-400 font-semibold flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+                      Idle · Ready for new tasks
+                    </span>
+                    <span>·</span>
+                    <span class="font-mono">210 pts earned</span>
+                  </div>
+                </div>
+              </div>
+
+              <button class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold transition shrink-0 cursor-pointer">
+                Dispatch Task
+              </button>
+            </div>
+          </div>
+
+          <!-- Agent 3: agent-scribe -->
+          <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                  A3
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-slate-900 dark:text-white">agent-scribe</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 font-semibold">L1 Junior</span>
+                    <span class="text-[10px] font-mono text-slate-400">GPT-4o mini</span>
+                  </div>
+                  <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                    Auto-triage & documentation sync
+                  </p>
+                  <div class="mt-2 flex items-center gap-3 text-[11px] text-slate-400">
+                    <span class="text-slate-500 font-semibold flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                      Monitoring Queue
+                    </span>
+                    <span>·</span>
+                    <span class="font-mono">95 pts earned</span>
+                  </div>
+                </div>
+              </div>
+
+              <button class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold transition shrink-0 cursor-pointer">
+                Logs
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 2: REGISTER / ADD NEW AGENT FORM -->
+        <div id="agents-create-panel" class="hidden p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+          <div>
+            <label class="block text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">Agent Name</label>
+            <input 
+              id="new-agent-name" 
+              type="text" 
+              placeholder="e.g. agent-guardian" 
+              class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#070b14] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#0284c7]"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">Agent Tier / Level</label>
+              <select id="new-agent-level" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#070b14] text-slate-900 dark:text-white">
+                <option value="L3 Senior">L3 Senior (Full Git Autonomy)</option>
+                <option value="L2 Mid" selected>L2 Mid (PR Review Required)</option>
+                <option value="L1 Junior">L1 Junior (Triage & Tests Only)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">LLM Provider</label>
+              <select id="new-agent-model" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#070b14] text-slate-900 dark:text-white">
+                <option value="Claude 3.5 Sonnet">Anthropic Claude 3.5 Sonnet</option>
+                <option value="Gemini 1.5 Pro">Google Gemini 1.5 Pro</option>
+                <option value="GPT-4o">OpenAI GPT-4o</option>
+                <option value="Local Endpoint">Custom Ollama / vLLM Endpoint</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">Assigned Scope</label>
+            <div class="grid grid-cols-3 gap-2 text-xs">
+              <label class="flex items-center gap-2 p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 cursor-pointer">
+                <input type="checkbox" checked class="rounded text-[#0284c7]">
+                <span>Product</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 cursor-pointer">
+                <input type="checkbox" checked class="rounded text-[#0284c7]">
+                <span>Marketing</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 cursor-pointer">
+                <input type="checkbox" class="rounded text-[#0284c7]">
+                <span>Security</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Generated Agent API Key -->
+          <div>
+            <label class="block text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">Agent API Token</label>
+            <div class="flex items-center gap-2">
+              <input 
+                type="text" 
+                readonly 
+                value="zk_live_agent_9f81a7b8e2194c5082d" 
+                class="flex-1 px-3 py-2 font-mono text-[11px] rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 select-all"
+              />
+              <button onclick="alert('API Token copied to clipboard!')" class="px-3 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                Copy
+              </button>
+            </div>
+          </div>
+
+          <div id="new-agent-success" class="hidden p-3 rounded-xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-300 text-xs font-mono">
+            <strong>✓ Agent Deployed:</strong> Added to active workspace agents.
+          </div>
+
+          <div class="pt-2 flex items-center justify-between">
+            <button onclick="switchAgentTab('view')" class="px-4 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer">
+              Back to Agents
+            </button>
+            <button onclick="deployNewAgent()" class="px-5 py-2 text-xs font-semibold rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white shadow-sm transition cursor-pointer">
+              Deploy Autonomous Agent
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL 2: HAI AGENT PLAN REVIEW (AISP)     -->
+  <!-- ========================================== -->
   <div id="hai-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-200">
     <div class="w-full max-w-3xl relative">
       <button 
-        onclick="closeModal()"
+        onclick="closeHaiModal()"
         class="absolute -top-10 right-0 text-white/70 hover:text-white text-xs font-mono flex items-center gap-1 cursor-pointer transition"
       >
         <span>[Close ESC]</span>
@@ -866,7 +1227,7 @@
           </div>
 
           <div class="pt-2 flex items-center justify-between gap-3">
-            <button onclick="closeModal()" class="px-4 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition cursor-pointer">
+            <button onclick="closeHaiModal()" class="px-4 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition cursor-pointer">
               Cancel
             </button>
             <button onclick="dispatchPlan()" class="px-5 py-2 text-xs font-semibold rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white shadow-sm transition cursor-pointer">
@@ -879,23 +1240,148 @@
     </div>
   </div>
 
+  <!-- SCRIPT CONTROLLERS -->
   <script>
-    function openModal() {
+    // Workspace switcher
+    function toggleWorkspaceDropdown() {
+      const menu = document.getElementById('workspace-menu');
+      menu.classList.toggle('hidden');
+    }
+    function selectWorkspace(name) {
+      document.getElementById('current-workspace-name').innerText = name;
+      document.getElementById('workspace-menu').classList.add('hidden');
+    }
+    document.addEventListener('click', (e) => {
+      const btn = document.getElementById('workspace-btn');
+      const menu = document.getElementById('workspace-menu');
+      if (!btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+
+    // Category Filter: Product, Marketing, Security, All
+    function filterCategory(cat) {
+      const tabs = ['all', 'product', 'marketing', 'security'];
+      tabs.forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (t === cat) {
+          el.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 font-bold transition cursor-pointer';
+        } else {
+          el.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 font-semibold transition cursor-pointer';
+        }
+      });
+
+      const rows = document.querySelectorAll('.issue-row');
+      let visibleCount = 0;
+      rows.forEach(r => {
+        if (cat === 'all' || r.getAttribute('data-category') === cat) {
+          r.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          r.classList.add('hidden');
+        }
+      });
+      document.getElementById('table-count-text').innerText = `Showing ${visibleCount} of 48 total issues in sprint`;
+    }
+
+    // Status Tab Filter
+    function filterTableStatus(status) {
+      const statuses = ['all', 'assigned', 'review', 'resolved'];
+      statuses.forEach(s => {
+        const el = document.getElementById('status-' + s);
+        if (s === status) {
+          el.className = 'pb-2 border-b-2 border-slate-900 dark:border-white text-slate-900 dark:text-white flex items-center gap-1.5 cursor-pointer font-bold';
+        } else {
+          el.className = 'pb-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 flex items-center gap-1.5 cursor-pointer transition font-semibold';
+        }
+      });
+
+      const rows = document.querySelectorAll('.issue-row');
+      let visibleCount = 0;
+      rows.forEach(r => {
+        if (status === 'all' || r.getAttribute('data-status') === status) {
+          r.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          r.classList.add('hidden');
+        }
+      });
+      document.getElementById('table-count-text').innerText = `Showing ${visibleCount} of 48 total issues in sprint`;
+    }
+
+    // Search filter
+    function searchTable() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const rows = document.querySelectorAll('.issue-row');
+      let visibleCount = 0;
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        if (text.includes(query)) {
+          r.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          r.classList.add('hidden');
+        }
+      });
+      document.getElementById('table-count-text').innerText = `Showing ${visibleCount} matching issues`;
+    }
+
+    // Agents Modal
+    function openAgentsModal() {
+      document.getElementById('agents-modal').classList.remove('hidden');
+    }
+    function closeAgentsModal() {
+      document.getElementById('agents-modal').classList.add('hidden');
+    }
+    function switchAgentTab(tab) {
+      const viewBtn = document.getElementById('agent-tab-view');
+      const createBtn = document.getElementById('agent-tab-create');
+      const viewPanel = document.getElementById('agents-view-panel');
+      const createPanel = document.getElementById('agents-create-panel');
+      if (tab === 'view') {
+        viewBtn.className = 'px-3 py-1 rounded-lg bg-white dark:bg-[#0e1626] text-slate-900 dark:text-white shadow-xs font-semibold';
+        createBtn.className = 'px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-semibold';
+        viewPanel.classList.remove('hidden');
+        createPanel.classList.add('hidden');
+      } else {
+        createBtn.className = 'px-3 py-1 rounded-lg bg-white dark:bg-[#0e1626] text-slate-900 dark:text-white shadow-xs font-semibold';
+        viewBtn.className = 'px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-semibold';
+        createPanel.classList.remove('hidden');
+        viewPanel.classList.add('hidden');
+      }
+    }
+    function deployNewAgent() {
+      const banner = document.getElementById('new-agent-success');
+      banner.classList.remove('hidden');
+      setTimeout(() => {
+        banner.classList.add('hidden');
+        switchAgentTab('view');
+      }, 1500);
+    }
+
+    // HAI Plan Review Modal
+    function openHaiModal() {
       document.getElementById('hai-modal').classList.remove('hidden');
     }
-    function closeModal() {
+    function closeHaiModal() {
       document.getElementById('hai-modal').classList.add('hidden');
     }
     function dispatchPlan() {
       const banner = document.getElementById('dispatch-banner');
       banner.classList.remove('hidden');
       setTimeout(() => {
-        closeModal();
+        closeHaiModal();
       }, 1400);
     }
+
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') dispatchPlan();
+      if (e.key === 'Escape') {
+        closeAgentsModal();
+        closeHaiModal();
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        dispatchPlan();
+      }
     });
   </script>
 </body>
