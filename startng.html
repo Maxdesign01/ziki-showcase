@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>start.ng · Good vibes. Good games. (Whimsical Edition)</title>
-  <meta name="description" content="Nigeria's home for free browser games. Play Naija-themed web games like Danfo Defense, Jollof Rush, and explore The Hangout. Built with whimsical good vibes by the community." />
+  <title>start.ng · Good vibes. Good games. (Enhanced Whimsical UI)</title>
+  <meta name="description" content="Nigeria's home for free browser games. Play Naija-themed web games like Danfo Defense and Jollof Rush, no download. Built by the HNG community." />
   
-  <!-- Favicon: Official Start.ng Lime SVG -->
+  <!-- Canonical Start.ng Favicon (Official Lime Squircle SVG) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23d8fd71'/%3E%3Cpath d='M26 19.5v25c0 1.6 1.7 2.5 3 1.7l19.5-12.5c1.2-.8 1.2-2.6 0-3.4L29 17.8c-1.3-.8-3 .1-3 1.7z' fill='%23292a23'/%3E%3C/svg%3E" />
   
-  <!-- Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <!-- Fonts: Plus Jakarta Sans & JetBrains Mono (Matches Start.ng system design) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Canvas Confetti -->
+  <!-- Canvas Confetti for purposeful celebratory milestones -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
   <script>
@@ -25,9 +25,8 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-            pixel: ['"Press Start 2P"', 'monospace'],
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'Menlo', 'monospace'],
           },
           colors: {
             start: {
@@ -35,11 +34,14 @@
               ink: '#292a23',
               paper: '#f6f5ee',
               card: '#fffefa',
-              darkbg: '#1c1d17',
-              darkcard: '#292a23',
+              darkbg: '#292a23',
+              darkcard: '#33342c',
               line: '#e4e2d6',
-              darkline: '#3d3e35',
+              darkline: '#4a4b41',
               muted: '#6b6c63',
+              darkmuted: '#b0b1a6',
+              shimmer: '#efede2',
+              darkshimmer: '#44453b',
             }
           }
         }
@@ -48,6 +50,7 @@
   </script>
 
   <style>
+    /* Start.ng Exact Design Tokens from Upstream CSS */
     :root {
       --bg: #f6f5ee;
       --card: #fffefa;
@@ -56,857 +59,911 @@
       --line: #e4e2d6;
       --lime: #d8fd71;
       --on-lime: #292a23;
-      --accent-yellow: #facc15;
-      --accent-coral: #fb7185;
-      --accent-blue: #38bdf8;
+      --shimmer: #efede2;
+      --accent-lagos: #f59e0b;
+      --accent-green: #2e7d32;
     }
 
     [data-theme="dark"] {
-      --bg: #1c1d17;
-      --card: #282a22;
+      --bg: #292a23;
+      --card: #33342c;
       --ink: #f6f5ee;
-      --muted: #a3a49a;
-      --line: #3b3d33;
+      --muted: #b0b1a6;
+      --line: #4a4b41;
       --lime: #d8fd71;
       --on-lime: #292a23;
+      --shimmer: #44453b;
     }
 
     body {
       background-color: var(--bg);
       color: var(--ink);
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
       transition: background-color 0.25s ease, color 0.25s ease;
-      background-image: radial-gradient(rgba(41, 42, 35, 0.08) 1.5px, transparent 1.5px);
-      background-size: 24px 24px;
+      background-image: radial-gradient(rgba(41, 42, 35, 0.07) 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
     }
 
     [data-theme="dark"] body {
       background-image: radial-gradient(rgba(246, 245, 238, 0.08) 1.5px, transparent 1.5px);
     }
 
-    /* Whimsical Bouncing, Bobbing & Floating */
-    @keyframes bob {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-7px) rotate(-1.5deg); }
+    /* Purposeful Microinteractions & Motion Standards */
+    
+    /* 1. Subtle, restrained floating animation (for hero badges & decorative highlights) */
+    @keyframes gentle-float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
     }
-    @keyframes bob-reverse {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-7px) rotate(1.5deg); }
-    }
-    @keyframes squish {
-      0%, 100% { transform: scale(1, 1); }
-      50% { transform: scale(1.08, 0.92); }
-    }
-    @keyframes pulse-lime {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(216, 253, 113, 0.7); }
-      50% { box-shadow: 0 0 0 14px rgba(216, 253, 113, 0); }
-    }
-    @keyframes marquee {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-50%); }
-    }
-    @keyframes dance-step {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      25% { transform: translateY(-5px) rotate(-4deg); }
-      75% { transform: translateY(-5px) rotate(4deg); }
+    .anim-gentle-float {
+      animation: gentle-float 4s ease-in-out infinite;
     }
 
-    .anim-bob { animation: bob 3.5s ease-in-out infinite; }
-    .anim-bob-rev { animation: bob-reverse 4s ease-in-out infinite; }
-    .anim-squish:hover { animation: squish 0.3s ease; }
-    .pulse-lime { animation: pulse-lime 2s infinite; }
-    .anim-dance { animation: dance-step 0.8s infinite ease-in-out; }
-
-    .marquee-track {
-      display: flex;
-      width: 200%;
-      animation: marquee 26s linear infinite;
+    /* 2. Playful curved smile stroke underline draw-in */
+    @keyframes draw-smile {
+      from { stroke-dashoffset: 120; }
+      to { stroke-dashoffset: 0; }
     }
-    .marquee-track:hover {
-      animation-play-state: paused;
+    .smile-stroke {
+      stroke-dasharray: 120;
+      animation: draw-smile 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* Pixelated rendering for avatar assets */
-    .pixelated {
-      image-rendering: pixelated;
-      image-rendering: crisp-edges;
+    /* 3. Micro-bounce on active press */
+    .btn-whimsical {
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.15s ease;
+    }
+    .btn-whimsical:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px -4px rgba(41, 42, 35, 0.15);
+    }
+    .btn-whimsical:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 2px 6px -2px rgba(41, 42, 35, 0.12);
     }
 
-    /* 3D Whimsical Card hover effect */
-    .whimsical-card {
-      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+    /* 4. Arrow nudge on interactive links */
+    .group:hover .icon-nudge {
+      transform: translate(3px, -3px);
     }
-    .whimsical-card:hover {
-      transform: translateY(-6px) scale(1.015);
-      box-shadow: 0 20px 30px -10px rgba(41, 42, 35, 0.12);
-    }
-    [data-theme="dark"] .whimsical-card:hover {
-      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+    .icon-nudge {
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
+    /* 5. Restrained Card Elevation (Zero layout shifts, smooth 200ms easing) */
+    .game-card-whimsical {
+      transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+      will-change: transform, box-shadow;
+    }
+    .game-card-whimsical:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 30px -10px rgba(41, 42, 35, 0.12);
+    }
+    [data-theme="dark"] .game-card-whimsical:hover {
+      box-shadow: 0 18px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Restrained zoom on game art */
+    .game-card-whimsical:hover .card-art-zoom {
+      transform: scale(1.035);
+    }
+    .card-art-zoom {
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform;
+    }
+
+    /* 6. Live Pulse Dot */
+    @keyframes live-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.5; }
+    }
+    .anim-live-pulse {
+      animation: live-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* 7. Skeleton Shimmer Wave */
+    @keyframes shimmer-sweep {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .skeleton-box {
+      position: relative;
+      overflow: hidden;
+      background-color: var(--shimmer);
+    }
+    .skeleton-box::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+      animation: shimmer-sweep 1.6s infinite;
+    }
+
+    /* 8. Jumping Dots Loader */
+    @keyframes dot-bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+    .jump-dot-1 { animation: dot-bounce 1.4s infinite ease-in-out both; animation-delay: -0.32s; }
+    .jump-dot-2 { animation: dot-bounce 1.4s infinite ease-in-out both; animation-delay: -0.16s; }
+    .jump-dot-3 { animation: dot-bounce 1.4s infinite ease-in-out both; }
+
+    /* Accessibility: Respect prefers-reduced-motion unconditionally */
     @media (prefers-reduced-motion: reduce) {
-      .anim-bob, .anim-bob-rev, .pulse-lime, .marquee-track, .anim-dance {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .anim-gentle-float, .smile-stroke, .anim-live-pulse, .skeleton-box::after {
         animation: none !important;
       }
-      .whimsical-card:hover {
+      .btn-whimsical:hover, .game-card-whimsical:hover, .card-art-zoom {
         transform: none !important;
       }
     }
   </style>
 </head>
-<body class="min-h-screen selection:bg-start-lime selection:text-start-ink">
+<body class="min-h-screen selection:bg-start-lime selection:text-start-ink flex flex-col justify-between">
 
-  <!-- TOP TICKER / GOOD VIBES MARQUEE -->
-  <div class="bg-start-lime text-start-ink text-xs font-bold py-2 overflow-hidden border-b border-start-ink/10 select-none">
-    <div class="marquee-track flex items-center gap-8 whitespace-nowrap uppercase tracking-wider font-mono">
-      <span class="flex items-center gap-2">🕹️ <b>start.ng</b> Nigeria's home for free browser games</span>
-      <span>•</span>
-      <span class="flex items-center gap-2">🚌 Danfo Defense: New Boss Stage live</span>
-      <span>•</span>
-      <span class="flex items-center gap-2">🍲 Jollof Rush: 14,000 pots cooked today</span>
-      <span>•</span>
-      <span class="flex items-center gap-2">🌴 The Hangout Park is bumping — 84 avatars online</span>
-      <span>•</span>
-      <span class="flex items-center gap-2">🏆 Daily Tournament: Winner gets the Golden Crown</span>
-      <span>•</span>
-      <span class="flex items-center gap-2">✨ No downloads. No sign-up wall. Pure Good Vibes.</span>
-      <span>•</span>
-      <!-- Duplicate for infinite loop -->
-      <span class="flex items-center gap-2">🕹️ <b>start.ng</b> Nigeria's home for free browser games</span>
-      <span>•</span>
-      <span class="flex items-center gap-2">🚌 Danfo Defense: New Boss Stage live</span>
-      <span>•</span>
-      <span class="flex items-center gap-2">🍲 Jollof Rush: 14,000 pots cooked today</span>
-      <span>•</span>
-      <span class="flex items-center gap-2">🌴 The Hangout Park is bumping — 84 avatars online</span>
-      <span>•</span>
-      <span class="flex items-center gap-2">🏆 Daily Tournament: Winner gets the Golden Crown</span>
-      <span>•</span>
-      <span class="flex items-center gap-2">✨ No downloads. No sign-up wall. Pure Good Vibes.</span>
+  <!-- TOP NOTIFICATION BANNER (Real Start.ng Good Vibes announcement) -->
+  <aside aria-label="Announcement" class="bg-start-lime text-start-ink text-xs font-bold py-2 px-4 border-b border-start-ink/10 select-none">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div class="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+        <span class="inline-block animate-bounce text-sm" aria-hidden="true">🎮</span>
+        <span class="font-mono text-[11px] uppercase tracking-wider bg-black/10 px-2 py-0.5 rounded-md">Today's Tournament</span>
+        <span class="font-semibold text-xs truncate">5 games live. Top score wins the Golden Crown!</span>
+      </div>
+      <div class="hidden sm:flex items-center gap-4 text-[11px] font-mono shrink-0">
+        <span>No downloads · 100% Free</span>
+        <button onclick="toggleAudio()" class="hover:underline flex items-center gap-1 cursor-pointer" title="Toggle sound effects">
+          <span id="audio-icon">🔊</span>
+          <span id="audio-text">Audio: ON</span>
+        </button>
+      </div>
     </div>
-  </div>
+  </aside>
 
-  <!-- MAIN NAVIGATION BAR (Authentic start.ng layout with whimsical polish) -->
-  <header class="sticky top-0 z-40 backdrop-blur-md bg-[#f6f5ee]/90 dark:bg-[#1c1d17]/90 border-b border-start-line dark:border-start-darkline px-4 sm:px-8 py-3.5 transition-colors">
+  <!-- MAIN NAVIGATION (Exact Start.ng Structure with Magnetic Microinteractions) -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-[#f6f5ee]/95 dark:bg-[#292a23]/95 border-b border-start-line dark:border-start-darkline px-4 sm:px-8 py-3.5 transition-colors">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
       
-      <!-- Brand Logo: Official Start.ng Lime Squircle + Typography -->
+      <!-- Logo + Tagline -->
       <div class="flex items-center gap-6">
-        <a href="#" class="flex items-center gap-3 group">
-          <div class="w-10 h-10 rounded-2xl bg-start-lime flex items-center justify-center shadow-sm group-hover:rotate-6 group-hover:scale-105 transition-transform duration-200">
-            <!-- Start.ng Play Triangle -->
-            <svg class="w-5 h-5 text-start-ink ml-0.5" viewBox="0 0 24 24" fill="currentColor">
+        <a href="#" class="flex items-center gap-3 group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-start-lime rounded-2xl">
+          <!-- Start.ng Lime Squircle Logo -->
+          <div class="w-10 h-10 rounded-2xl bg-start-lime flex items-center justify-center shadow-xs group-hover:rotate-6 group-hover:scale-105 transition-transform duration-200">
+            <svg class="w-5 h-5 text-start-ink ml-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M6 4.5v15c0 1.2 1.3 1.9 2.3 1.3l12-7.5c1-.6 1-2 0-2.6l-12-7.5C7.3 2.6 6 3.3 6 4.5z"/>
             </svg>
           </div>
           <div class="flex flex-col">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5">
               <span class="text-2xl font-black tracking-tight text-start-ink dark:text-start-paper">start<span class="text-emerald-500">.</span>ng</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-start-lime text-start-ink border border-start-ink/10 shadow-2xs">
-                Whimsical ✨
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-start-lime/40 text-start-ink dark:text-start-lime border border-start-ink/10">
+                Play
               </span>
             </div>
-            <span class="text-[11px] font-semibold text-start-muted dark:text-slate-400 -mt-1 hidden sm:block">
+            <span class="text-[11px] font-semibold text-start-muted dark:text-start-darkmuted -mt-1 hidden sm:block">
               Good vibes. Good games.
             </span>
           </div>
         </a>
 
-        <!-- Navigation Links (Exact from start.ng) -->
-        <nav class="hidden md:flex items-center gap-1.5 text-xs font-bold text-start-ink dark:text-start-paper">
-          <a href="#games" class="px-3.5 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition flex items-center gap-1.5">
-            <span>🎮 Games</span>
+        <!-- Desktop Navigation Items with subtle hover pill -->
+        <nav class="hidden md:flex items-center gap-1 text-xs font-bold text-start-ink dark:text-start-paper" aria-label="Main navigation">
+          <a href="#games" class="px-3.5 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-150">
+            Games
           </a>
-          <a href="#hangout" class="px-3.5 py-2 rounded-xl bg-start-lime/25 text-start-ink dark:text-start-lime border border-start-lime/40 transition flex items-center gap-1.5">
-            <span>🌴 The Hangout</span>
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <a href="#hangout" class="px-3.5 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-150 flex items-center gap-1.5">
+            <span>The Hangout</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 anim-live-pulse" aria-label="Online"></span>
           </a>
-          <a href="#tournament" class="px-3.5 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition flex items-center gap-1.5">
-            <span>🏆 Tournament</span>
+          <a href="#tournament" class="px-3.5 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-150">
+            Tournaments
           </a>
-          <a href="#wardrobe" class="px-3.5 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition flex items-center gap-1.5">
-            <span>👕 Drip Studio</span>
+          <a href="#creators" class="px-3.5 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-150">
+            Creators
           </a>
-          <a href="#creators" class="px-3.5 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition flex items-center gap-1.5">
-            <span>🎨 Creators</span>
+          <a href="#about" class="px-3.5 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-150">
+            About
           </a>
         </nav>
       </div>
 
-      <!-- Right Header Actions: Sound, Custom Avatar, Theme, Ziki Link -->
+      <!-- Right Header Actions -->
       <div class="flex items-center gap-2.5 sm:gap-3">
         
-        <!-- Retro 8-bit Audio Toggle -->
+        <!-- Live Quick Search -->
+        <div class="relative hidden lg:block w-52">
+          <input 
+            type="text" 
+            id="game-search-input"
+            oninput="handleSearch(this.value)"
+            placeholder="Search games..." 
+            class="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs font-semibold bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline text-start-ink dark:text-start-paper placeholder:text-start-muted focus:outline-none focus:border-start-lime transition"
+          />
+          <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-start-muted pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+          </svg>
+        </div>
+
+        <!-- Skeleton Loading Test Toggle -->
         <button 
-          id="sound-btn"
-          onclick="toggleBgm()" 
-          class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-start-line dark:border-start-darkline bg-start-card dark:bg-start-darkcard hover:bg-black/5 text-xs font-semibold shadow-2xs transition cursor-pointer"
-          title="Toggle Afrobeats Chiptune & Arcade SFX"
+          onclick="toggleSkeletonPreview()" 
+          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-start-line dark:border-start-darkline bg-start-card dark:bg-start-darkcard hover:bg-black/5 text-[11px] font-mono font-bold text-start-muted hover:text-start-ink dark:hover:text-start-paper transition cursor-pointer"
+          title="Inspect animated loading skeletons & states"
         >
-          <span id="sound-icon" class="text-sm">🎵</span>
-          <span id="sound-label" class="hidden lg:inline text-[11px] font-mono">Good Vibes Jukebox</span>
+          <span>⏳ Skeletons</span>
         </button>
 
-        <!-- Player Avatar Pill (Interactive Preview) -->
-        <button 
-          onclick="openWardrobeModal()" 
-          class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-start-line dark:border-start-darkline bg-start-card dark:bg-start-darkcard hover:border-start-lime transition shadow-2xs group cursor-pointer"
-          title="Customize your 8-bit Naija Avatar"
-        >
-          <div id="nav-avatar-box" class="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center text-sm shadow-2xs relative overflow-hidden group-hover:scale-110 transition-transform">
-            <span id="nav-avatar-emoji">😎</span>
-          </div>
-          <div class="hidden sm:flex flex-col text-left">
-            <span class="text-[11px] font-bold text-start-ink dark:text-start-paper leading-tight" id="nav-username">Chukwu</span>
-            <span class="text-[9px] font-mono font-semibold text-emerald-600 dark:text-emerald-400">Level 8 Gamer</span>
-          </div>
-        </button>
-
-        <!-- Dark / Light Theme Toggle -->
+        <!-- Day / Night Theme Toggle -->
         <button 
           onclick="toggleTheme()" 
-          class="p-2 rounded-xl border border-start-line dark:border-start-darkline bg-start-card dark:bg-start-darkcard hover:bg-black/5 text-start-ink dark:text-start-paper transition cursor-pointer"
-          title="Toggle Light / Dark Arcade Theme"
+          id="theme-btn"
+          aria-label="Toggle dark mode"
+          class="p-2 rounded-xl border border-start-line dark:border-start-darkline bg-start-card dark:bg-start-darkcard hover:bg-black/5 text-start-ink dark:text-start-paper transition-transform duration-200 active:rotate-45 cursor-pointer"
+          title="Toggle Dark / Light Theme"
         >
           <span id="theme-icon" class="text-sm">🌙</span>
         </button>
 
-        <!-- Switch to Ziki Dashboard Link -->
+        <!-- User Character Avatar Pill -->
+        <button 
+          onclick="showDripModal()" 
+          class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-start-line dark:border-start-darkline bg-start-card dark:bg-start-darkcard hover:border-start-lime transition shadow-2xs group cursor-pointer"
+          title="Click to customize your 8-bit character"
+        >
+          <div id="user-avatar-badge" class="w-6 h-6 rounded-lg bg-start-lime flex items-center justify-center text-xs font-bold text-start-ink group-hover:scale-110 transition-transform">
+            😎
+          </div>
+          <span class="text-xs font-bold text-start-ink dark:text-start-paper hidden sm:inline">Chukwu</span>
+        </button>
+
+        <!-- Link back to Ziki Workspace -->
         <a 
           href="index.html" 
-          class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-start-ink text-start-lime text-xs font-bold shadow-sm hover:bg-black transition"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-start-ink text-start-lime text-xs font-bold hover:bg-black transition shadow-xs"
+          title="Return to Ziki Issue Tracker"
         >
-          <span>← Ziki Issues</span>
+          <span>← Ziki</span>
         </a>
+
       </div>
 
     </div>
   </header>
 
-  <!-- HERO SECTION: Good Vibes, Good Games & Instant Playable Danfo Mini-Game -->
-  <section class="relative pt-10 pb-16 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden">
-    
-    <!-- Ambient whimsical background blobs -->
-    <div class="absolute -top-16 -left-16 w-96 h-96 bg-start-lime/25 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute top-20 right-0 w-80 h-80 bg-amber-400/20 rounded-full blur-3xl pointer-events-none"></div>
-    
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8 w-full flex-1">
+
+    <!-- HERO SECTION (Preserves exact content hierarchy with purposeful whimsical microinteractions) -->
+    <section class="relative pt-6 pb-12 sm:pb-16 overflow-hidden">
       
-      <!-- Left Column: Whimsical Punchy Copy + Direct CTAs -->
-      <div class="lg:col-span-7 flex flex-col gap-5 text-left">
+      <!-- Subtle Decorative Ambient Glows -->
+      <div class="absolute -top-12 -left-12 w-80 h-80 bg-start-lime/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+      <div class="absolute top-12 right-0 w-72 h-72 bg-amber-400/15 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40 text-xs font-extrabold w-max">
-          <span class="animate-bounce">🇳🇬</span>
-          <span>100% Free · No App Store · Play In 1-Second</span>
-        </div>
-
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-start-ink dark:text-start-paper leading-[1.08]">
-          Good vibes.<br />
-          <span class="relative inline-block text-start-ink dark:text-white">
-            Good games.
-            <svg class="absolute -bottom-2 left-0 w-full h-4 text-start-lime" viewBox="0 0 100 20" preserveAspectRatio="none">
-              <path d="M0 15 Q 50 0 100 15" stroke="currentColor" stroke-width="8" fill="none" stroke-linecap="round"/>
-            </svg>
-          </span>
-        </h1>
-
-        <p class="text-base sm:text-lg text-start-muted dark:text-slate-300 max-w-xl font-medium leading-relaxed">
-          Nigeria's vibrant home for free browser games. Swerve through Lagos traffic in <b>Danfo Defense</b>, stir up party flavors in <b>Jollof Rush</b>, or chill with friends in <b>The Hangout Park</b>.
-        </p>
-
-        <!-- Action Buttons -->
-        <div class="flex flex-wrap items-center gap-3 pt-2">
-          <button 
-            onclick="playMicroGame('danfo')" 
-            class="px-6 py-3.5 rounded-2xl bg-start-lime text-start-ink font-black text-sm shadow-md hover:bg-[#cbf55c] transition transform hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer pulse-lime"
-          >
-            <!-- Yellow Danfo bus icon -->
-            <span class="text-lg">🚌</span>
-            <span>Play Danfo Defense (Instant)</span>
-          </button>
-
-          <a 
-            href="#hangout" 
-            class="px-6 py-3.5 rounded-2xl border-2 border-start-ink dark:border-start-paper text-start-ink dark:text-start-paper font-black text-sm hover:bg-black/5 dark:hover:bg-white/5 transition flex items-center gap-2"
-          >
-            <span class="text-lg">🌴</span>
-            <span>Enter The Hangout Park</span>
-          </a>
-
-          <button 
-            onclick="spinLuckyWheel()" 
-            class="px-4 py-3.5 rounded-2xl bg-amber-400/20 text-amber-900 dark:text-amber-200 border border-amber-400/40 font-bold text-sm hover:bg-amber-400/30 transition flex items-center gap-2 cursor-pointer"
-            title="Spin today's tournament wheel"
-          >
-            <span class="animate-spin text-base">🎡</span>
-            <span>Daily Spin</span>
-          </button>
-        </div>
-
-        <!-- Social Proof Stats -->
-        <div class="flex items-center gap-6 pt-4 border-t border-start-line dark:border-start-darkline text-xs font-semibold text-start-muted dark:text-slate-400">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span><b class="text-start-ink dark:text-start-paper">124</b> Playing Now</span>
-          </div>
-          <div>•</div>
-          <div><b class="text-start-ink dark:text-start-paper">48+</b> Naija-Themed Games</div>
-          <div>•</div>
-          <div>Built by <b class="text-start-ink dark:text-start-paper">HNG Community</b></div>
-        </div>
-
-      </div>
-
-      <!-- Right Column: PLAYABLE IN-HERO ARCADE MACHINE (Danfo & Jollof Live Micro-Game!) -->
-      <div class="lg:col-span-5">
-        <div class="relative bg-start-ink text-white rounded-3xl p-5 shadow-2xl border-4 border-start-lime anim-bob">
+        <!-- Left: Hero Copy, Badges, and Primary CTA -->
+        <div class="lg:col-span-7 flex flex-col gap-5 text-left">
           
-          <!-- Arcade Cabinet Header -->
-          <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
-            <div class="flex items-center gap-2">
-              <div class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></div>
-              <span class="text-xs font-mono font-bold tracking-wider text-start-lime uppercase">start.ng LIVE ARCADE</span>
-            </div>
-            <div class="text-[11px] font-mono text-slate-400">
-              HIGH: <span id="arcade-high-score" class="text-amber-400 font-bold">1,820</span>
-            </div>
+          <!-- Category / Location Badge -->
+          <div class="anim-gentle-float inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline shadow-2xs w-max">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 anim-live-pulse"></span>
+            <span class="text-xs font-bold text-start-ink dark:text-start-paper">
+              Nigeria's home for free browser games 🇳🇬
+            </span>
           </div>
 
-          <!-- ARCADE SCREEN CANVAS / INTERACTIVE ZONE -->
-          <div class="relative w-full h-64 bg-[#141810] rounded-2xl overflow-hidden border-2 border-white/20 flex flex-col justify-between p-3 select-none">
-            
-            <!-- Game Canvas -->
-            <canvas id="arcade-canvas" width="400" height="250" class="absolute inset-0 w-full h-full"></canvas>
+          <!-- Main Dominant Heading -->
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-start-ink dark:text-start-paper leading-[1.08]">
+            Good vibes.<br />
+            <span class="relative inline-block text-start-ink dark:text-white">
+              Good games.
+              <!-- Whimsical Drawn Smile Underline -->
+              <svg class="absolute -bottom-2.5 left-0 w-full h-4 text-start-lime" viewBox="0 0 100 20" preserveAspectRatio="none" aria-hidden="true">
+                <path class="smile-stroke" d="M2 15 Q 50 2 98 15" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </h1>
 
-            <!-- On-Screen HUD Overlay -->
-            <div class="relative z-10 flex items-center justify-between pointer-events-none">
-              <div class="px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-[11px] font-mono text-start-lime font-bold">
-                SCORE: <span id="arcade-score">0</span>
-              </div>
-              <div class="px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-[11px] font-mono text-amber-300 font-bold">
-                PASSENGERS: <span id="arcade-passengers">0</span>/5
-              </div>
-            </div>
-
-            <!-- Start / Game Over Overlay -->
-            <div id="arcade-overlay" class="absolute inset-0 z-20 bg-black/80 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center">
-              <div class="text-3xl mb-1">🚌</div>
-              <h3 class="text-lg font-black text-start-lime font-pixel tracking-wider mb-1">DANFO DASH</h3>
-              <p class="text-xs text-slate-300 mb-3 max-w-[240px]">
-                Swerve past potholes & agberos! Collect yellow coins and fuel cans!
-              </p>
-              <button 
-                onclick="startArcadeGame()" 
-                class="px-5 py-2.5 rounded-xl bg-start-lime text-start-ink font-bold text-xs uppercase tracking-wider font-mono shadow-md hover:scale-105 active:scale-95 transition cursor-pointer"
-              >
-                ▶ START ENGINE (TAP OR ARROWS)
-              </button>
-            </div>
-
-            <!-- Bottom Arcade Controls -->
-            <div class="relative z-10 flex items-center justify-between pt-2">
-              <span class="text-[10px] font-mono text-slate-400">Controls: ← → keys or tap buttons</span>
-              <div class="flex gap-2">
-                <button onclick="steerDanfo(-1)" class="w-10 h-8 rounded-lg bg-white/20 active:bg-start-lime active:text-start-ink text-white font-bold text-xs flex items-center justify-center cursor-pointer">◀</button>
-                <button onclick="steerDanfo(1)" class="w-10 h-8 rounded-lg bg-white/20 active:bg-start-lime active:text-start-ink text-white font-bold text-xs flex items-center justify-center cursor-pointer">▶</button>
-                <button onclick="honkDanfoHorn()" class="px-3 h-8 rounded-lg bg-amber-400 text-start-ink font-bold text-xs flex items-center justify-center cursor-pointer shadow-xs" title="Honk Danfo Horn">📢 PEEP!</button>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Bottom Arcade Cabinet Detail -->
-          <div class="mt-3 flex items-center justify-between text-[11px] text-slate-400 font-mono">
-            <span>COIN: FREE PLAY</span>
-            <span class="text-start-lime font-bold">● ONLINE READY</span>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- WHIMSICAL SECTION 1: "THE HANGOUT" (Interactive 2D Pixel Park) -->
-  <section id="hangout" class="py-12 px-4 sm:px-8 max-w-7xl mx-auto">
-    
-    <div class="bg-start-card dark:bg-start-darkcard rounded-3xl p-6 sm:p-8 border-2 border-start-line dark:border-start-darkline shadow-sm">
-      
-      <!-- Section Header -->
-      <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
-        <div>
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-xs font-bold mb-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span>Flagship Multiplayer Space</span>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-black text-start-ink dark:text-start-paper">
-            The Hangout · Island Park 🌴
-          </h2>
-          <p class="text-xs sm:text-sm text-start-muted dark:text-slate-400">
-            Click anywhere on the grass to walk your character! Tap on other avatars to chat or high-five.
-          </p>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <button 
-            onclick="sayHangoutQuote()" 
-            class="px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs shadow-xs hover:bg-[#cbf55c] transition cursor-pointer flex items-center gap-1.5"
-          >
-            <span>💬 Speak in Park</span>
-          </button>
-          <button 
-            onclick="openWardrobeModal()" 
-            class="px-4 py-2 rounded-xl border border-start-line dark:border-start-darkline text-start-ink dark:text-start-paper font-bold text-xs hover:bg-black/5 dark:hover:bg-white/5 transition flex items-center gap-1.5 cursor-pointer"
-          >
-            <span>👕 Change Outfit</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- THE HANGOUT CANVAS SIMULATOR -->
-      <div class="relative w-full h-80 bg-gradient-to-b from-[#86efac] via-[#4ade80] to-[#22c55e] dark:from-[#1b4332] dark:via-[#081c15] dark:to-[#040d0a] rounded-2xl overflow-hidden border-2 border-emerald-600/30 shadow-inner select-none cursor-crosshair">
-        
-        <canvas id="hangout-canvas" width="800" height="320" class="w-full h-full"></canvas>
-
-        <!-- Speech Bubble Toast -->
-        <div id="hangout-speech-bubble" class="absolute top-4 left-1/2 -translate-x-1/2 hidden bg-white dark:bg-slate-900 px-4 py-2 rounded-2xl shadow-xl border-2 border-start-ink dark:border-start-lime text-xs font-bold text-start-ink dark:text-white transition-all transform duration-200">
-          "Who dey breathe?! 🚀"
-        </div>
-
-        <!-- Park Legend / Mini HUD -->
-        <div class="absolute bottom-3 left-3 bg-white/80 dark:bg-black/70 backdrop-blur-xs px-3 py-1.5 rounded-xl text-[10px] font-mono text-start-ink dark:text-slate-200 border border-black/10">
-          📍 Lagos Island Park (Zone 2) · 👥 <b>6</b> Chilling nearby
-        </div>
-
-        <!-- Quick Reaction Bar -->
-        <div class="absolute bottom-3 right-3 flex items-center gap-1.5 bg-white/80 dark:bg-black/70 backdrop-blur-xs p-1.5 rounded-xl border border-black/10">
-          <button onclick="sendHangoutReaction('❤️')" class="hover:scale-125 transition p-1 text-xs cursor-pointer">❤️</button>
-          <button onclick="sendHangoutReaction('🔥')" class="hover:scale-125 transition p-1 text-xs cursor-pointer">🔥</button>
-          <button onclick="sendHangoutReaction('⚡')" class="hover:scale-125 transition p-1 text-xs cursor-pointer">⚡</button>
-          <button onclick="sendHangoutReaction('💃')" class="hover:scale-125 transition p-1 text-xs cursor-pointer">💃</button>
-          <button onclick="sendHangoutReaction('🇳🇬')" class="hover:scale-125 transition p-1 text-xs cursor-pointer">🇳🇬</button>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- WHIMSICAL SECTION 2: LIVING GAME SHELVES -->
-  <section id="games" class="py-12 px-4 sm:px-8 max-w-7xl mx-auto">
-    
-    <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
-      <div>
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-start-lime/30 text-start-ink dark:text-start-lime text-xs font-extrabold uppercase tracking-wider mb-2">
-          <span>Featured Games</span>
-        </div>
-        <h2 class="text-3xl sm:text-4xl font-black text-start-ink dark:text-start-paper">
-          Handcrafted Naija Hits 🎮
-        </h2>
-        <p class="text-xs sm:text-sm text-start-muted dark:text-slate-400">
-          Built with love, laughter, and pure culture by developers across Nigeria.
-        </p>
-      </div>
-
-      <!-- Category Filter Pills (Exact from start.ng categories) -->
-      <div class="flex flex-wrap gap-1.5 text-xs font-bold">
-        <button onclick="filterShelf('all')" id="shelf-all" class="px-3.5 py-1.5 rounded-xl bg-start-ink text-start-lime shadow-2xs">All Games (48)</button>
-        <button onclick="filterShelf('action')" id="shelf-action" class="px-3.5 py-1.5 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline hover:bg-black/5 text-start-ink dark:text-start-paper">Action & Rush</button>
-        <button onclick="filterShelf('cooking')" id="shelf-cooking" class="px-3.5 py-1.5 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline hover:bg-black/5 text-start-ink dark:text-start-paper">Cooking & Food</button>
-        <button onclick="filterShelf('arcade')" id="shelf-arcade" class="px-3.5 py-1.5 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline hover:bg-black/5 text-start-ink dark:text-start-paper">Retro & Arcade</button>
-      </div>
-    </div>
-
-    <!-- GAME CARDS GRID (With 3D Hover & Living Game Status) -->
-    <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-      <!-- CARD 1: Danfo Defense -->
-      <div class="whimsical-card bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="action">
-        <div>
-          <!-- Thumbnail / Visual -->
-          <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 p-4 overflow-hidden flex items-center justify-center border border-amber-500/20">
-            <div class="text-6xl group-hover:scale-125 transition-transform duration-300">🚌</div>
-            <div class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
-              🔥 TRENDING #1
-            </div>
-            <div class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              42 Online
-            </div>
-          </div>
-
-          <!-- Info -->
-          <div class="pt-4">
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition">
-                Danfo Defense
-              </h3>
-              <span class="text-xs font-bold text-amber-500">★ 4.9</span>
-            </div>
-            <p class="text-xs text-start-muted dark:text-slate-400 line-clamp-2">
-              Defend your yellow bus through Oshodi roundabout against potholes and rogue taxes.
-            </p>
-          </div>
-        </div>
-
-        <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
-          <span class="text-[11px] font-mono text-start-muted">by @emmyanz</span>
-          <button onclick="launchGameModal('Danfo Defense', '🚌')" class="px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs hover:bg-[#cbf55c] transition cursor-pointer shadow-2xs">
-            Play ↗
-          </button>
-        </div>
-      </div>
-
-      <!-- CARD 2: Jollof Rush -->
-      <div class="whimsical-card bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="cooking">
-        <div>
-          <!-- Thumbnail / Visual -->
-          <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-500 p-4 overflow-hidden flex items-center justify-center border border-rose-500/20">
-            <div class="text-6xl group-hover:scale-125 transition-transform duration-300">🍲</div>
-            <div class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
-              🏆 STAFF PICK
-            </div>
-            <div class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              28 Online
-            </div>
-          </div>
-
-          <!-- Info -->
-          <div class="pt-4">
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition">
-                Jollof Rush
-              </h3>
-              <span class="text-xs font-bold text-amber-500">★ 4.8</span>
-            </div>
-            <p class="text-xs text-start-muted dark:text-slate-400 line-clamp-2">
-              Cook party jollof with secret spices. Catch the fried plantains before they burn!
-            </p>
-          </div>
-        </div>
-
-        <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
-          <span class="text-[11px] font-mono text-start-muted">by @chef_tunde</span>
-          <button onclick="launchGameModal('Jollof Rush', '🍲')" class="px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs hover:bg-[#cbf55c] transition cursor-pointer shadow-2xs">
-            Play ↗
-          </button>
-        </div>
-      </div>
-
-      <!-- CARD 3: Okada Speedrun -->
-      <div class="whimsical-card bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="action">
-        <div>
-          <!-- Thumbnail / Visual -->
-          <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-500 p-4 overflow-hidden flex items-center justify-center border border-sky-500/20">
-            <div class="text-6xl group-hover:scale-125 transition-transform duration-300">🏍️</div>
-            <div class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
-              ⚡ FAST PACED
-            </div>
-            <div class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              35 Online
-            </div>
-          </div>
-
-          <!-- Info -->
-          <div class="pt-4">
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition">
-                Okada Speedrun
-              </h3>
-              <span class="text-xs font-bold text-amber-500">★ 4.9</span>
-            </div>
-            <p class="text-xs text-start-muted dark:text-slate-400 line-clamp-2">
-              Weave through mainland traffic jams to deliver urgent parcels before the timer dings.
-            </p>
-          </div>
-        </div>
-
-        <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
-          <span class="text-[11px] font-mono text-start-muted">by @naijadevs</span>
-          <button onclick="launchGameModal('Okada Speedrun', '🏍️')" class="px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs hover:bg-[#cbf55c] transition cursor-pointer shadow-2xs">
-            Play ↗
-          </button>
-        </div>
-      </div>
-
-      <!-- CARD 4: Suya Night Market -->
-      <div class="whimsical-card bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="cooking">
-        <div>
-          <!-- Thumbnail / Visual -->
-          <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-orange-600 to-red-600 p-4 overflow-hidden flex items-center justify-center border border-orange-500/20">
-            <div class="text-6xl group-hover:scale-125 transition-transform duration-300">🍢</div>
-            <div class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
-              🌶️ SPICY
-            </div>
-            <div class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              19 Online
-            </div>
-          </div>
-
-          <!-- Info -->
-          <div class="pt-4">
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition">
-                Suya Night Market
-              </h3>
-              <span class="text-xs font-bold text-amber-500">★ 4.7</span>
-            </div>
-            <p class="text-xs text-start-muted dark:text-slate-400 line-clamp-2">
-              Grill beef skewers at 11 PM in Maitama. Add onions and extra yaji pepper for tip multipliers.
-            </p>
-          </div>
-        </div>
-
-        <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
-          <span class="text-[11px] font-mono text-start-muted">by @suya_master</span>
-          <button onclick="launchGameModal('Suya Night Market', '🍢')" class="px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs hover:bg-[#cbf55c] transition cursor-pointer shadow-2xs">
-            Play ↗
-          </button>
-        </div>
-      </div>
-
-      <!-- CARD 5: Afrobeats Groove Tap -->
-      <div class="whimsical-card bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="arcade">
-        <div>
-          <!-- Thumbnail / Visual -->
-          <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-500 p-4 overflow-hidden flex items-center justify-center border border-purple-500/20">
-            <div class="text-6xl group-hover:scale-125 transition-transform duration-300">🥁</div>
-            <div class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
-              🎶 RHYTHM
-            </div>
-            <div class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              31 Online
-            </div>
-          </div>
-
-          <!-- Info -->
-          <div class="pt-4">
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition">
-                Afrobeats Groove Tap
-              </h3>
-              <span class="text-xs font-bold text-amber-500">★ 4.9</span>
-            </div>
-            <p class="text-xs text-start-muted dark:text-slate-400 line-clamp-2">
-              Tap the talking drums and bass kicks on beat. Chain combos to summon the dancing brass band!
-            </p>
-          </div>
-        </div>
-
-        <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
-          <span class="text-[11px] font-mono text-start-muted">by @lagosbeats</span>
-          <button onclick="launchGameModal('Afrobeats Groove Tap', '🥁')" class="px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs hover:bg-[#cbf55c] transition cursor-pointer shadow-2xs">
-            Play ↗
-          </button>
-        </div>
-      </div>
-
-      <!-- CARD 6: Lagos Traffic Hustle -->
-      <div class="whimsical-card bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="arcade">
-        <div>
-          <!-- Thumbnail / Visual -->
-          <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-400 p-4 overflow-hidden flex items-center justify-center border border-teal-500/20">
-            <div class="text-6xl group-hover:scale-125 transition-transform duration-300">🚦</div>
-            <div class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
-              ⭐ CLASSIC
-            </div>
-            <div class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              23 Online
-            </div>
-          </div>
-
-          <!-- Info -->
-          <div class="pt-4">
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition">
-                Lagos Traffic Hustle
-              </h3>
-              <span class="text-xs font-bold text-amber-500">★ 4.8</span>
-            </div>
-            <p class="text-xs text-start-muted dark:text-slate-400 line-clamp-2">
-              Sell gala and chilled drinks to cars stuck on Third Mainland Bridge before the light turns green.
-            </p>
-          </div>
-        </div>
-
-        <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
-          <span class="text-[11px] font-mono text-start-muted">by @galahustler</span>
-          <button onclick="launchGameModal('Lagos Traffic Hustle', '🚦')" class="px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs hover:bg-[#cbf55c] transition cursor-pointer shadow-2xs">
-            Play ↗
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- WHIMSICAL SECTION 3: WARDROBE & DRIP STUDIO -->
-  <section id="wardrobe" class="py-12 px-4 sm:px-8 max-w-7xl mx-auto">
-    <div class="bg-gradient-to-r from-amber-400/20 via-start-lime/20 to-emerald-400/20 dark:from-amber-950/40 dark:via-emerald-950/40 dark:to-teal-950/40 rounded-3xl p-6 sm:p-10 border-2 border-start-lime shadow-sm">
-      
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-        
-        <!-- Wardrobe Copy & Controls -->
-        <div class="md:col-span-8 flex flex-col gap-4">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-start-ink text-start-lime text-xs font-mono font-bold w-max">
-            <span>👕 WARDROBE CUSTOMIZER</span>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-black text-start-ink dark:text-start-paper">
-            Style Your 8-Bit Naija Character ✨
-          </h2>
-          <p class="text-xs sm:text-sm text-start-muted dark:text-slate-300">
-            Pick your hat, glasses, and outfit. Your custom drip shows up in the Hangout and on the community leaderboards!
+          <!-- Subtitle / Supporting copy -->
+          <p class="text-base sm:text-lg text-start-muted dark:text-start-darkmuted font-medium max-w-xl leading-relaxed">
+            Play Naija-themed web games like <b>Danfo Defense</b> and <b>Jollof Rush</b> with zero downloads or install delays. Built and hosted by the vibrant HNG developer community.
           </p>
 
-          <!-- Drip Selector Tabs -->
-          <div class="flex flex-wrap gap-2 pt-2">
-            <button onclick="changeOutfit('danfo')" class="px-3.5 py-2 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline hover:border-start-lime text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-              <span>🚌 Danfo Conductor</span>
+          <!-- Primary & Secondary Actions with Button Microinteractions -->
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            
+            <!-- Primary Action: Play Today's Game -->
+            <button 
+              onclick="launchQuickGame('Danfo Defense', '🚌')" 
+              class="btn-whimsical px-6 py-3.5 rounded-2xl bg-start-lime text-start-ink font-black text-sm shadow-sm flex items-center gap-2.5 group cursor-pointer focus-visible:ring-2 focus-visible:ring-start-ink"
+            >
+              <span class="text-lg group-hover:scale-125 transition-transform duration-200">🚌</span>
+              <span>Play Danfo Defense</span>
+              <span class="icon-nudge font-bold text-xs">↗</span>
             </button>
-            <button onclick="changeOutfit('agbada')" class="px-3.5 py-2 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline hover:border-start-lime text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-              <span>👑 Emerald Agbada</span>
+
+            <!-- Secondary Action: Jump to The Hangout -->
+            <a 
+              href="#hangout" 
+              class="btn-whimsical px-5 py-3.5 rounded-2xl border-2 border-start-ink dark:border-start-paper text-start-ink dark:text-start-paper font-bold text-sm bg-transparent hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2"
+            >
+              <span class="text-base">🌴</span>
+              <span>Explore The Hangout</span>
+            </a>
+
+            <!-- Tertiary: Daily Tournament Quick Enter -->
+            <button 
+              onclick="enterDailyTournament()" 
+              class="btn-whimsical px-4 py-3.5 rounded-2xl bg-amber-400/20 text-amber-900 dark:text-amber-300 border border-amber-400/40 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>🏆 Daily Blitz</span>
             </button>
-            <button onclick="changeOutfit('cyber')" class="px-3.5 py-2 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline hover:border-start-lime text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-              <span>⚡ Cyber Y2K Hoodie</span>
-            </button>
-            <button onclick="randomizeDrip()" class="px-3.5 py-2 rounded-xl bg-start-lime text-start-ink font-black text-xs transition flex items-center gap-1.5 cursor-pointer shadow-xs">
-              <span>🎲 Surprise Me!</span>
-            </button>
+
           </div>
+
+          <!-- Proof & Live Stats -->
+          <div class="flex items-center gap-6 pt-4 border-t border-start-line dark:border-start-darkline text-xs font-semibold text-start-muted dark:text-start-darkmuted">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span><b class="text-start-ink dark:text-start-paper">124</b> Players Online</span>
+            </div>
+            <div>•</div>
+            <div><b class="text-start-ink dark:text-start-paper">48</b> Handcrafted Games</div>
+            <div>•</div>
+            <div>Instant Browser Play</div>
+          </div>
+
         </div>
 
-        <!-- Live Avatar Preview Card -->
-        <div class="md:col-span-4 flex flex-col items-center justify-center">
-          <div class="w-44 h-52 rounded-3xl bg-start-card dark:bg-start-darkcard border-4 border-start-lime shadow-xl flex flex-col items-center justify-center p-4 relative overflow-hidden group">
-            
-            <!-- Avatar Display -->
-            <div id="wardrobe-avatar-display" class="text-6xl anim-dance transition-transform">
-              😎
-            </div>
-
-            <!-- Avatar Tagline -->
-            <div class="mt-4 text-center">
-              <span id="wardrobe-outfit-name" class="text-xs font-mono font-bold text-start-ink dark:text-start-paper">
-                Danfo Conductor
+        <!-- Right: Hero Spotlight Card with Restrained Cursor Parallax -->
+        <div class="lg:col-span-5">
+          <div 
+            id="hero-spotlight-card"
+            class="game-card-whimsical bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline shadow-sm relative overflow-hidden group"
+          >
+            <!-- Badge -->
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-start-muted dark:text-start-darkmuted flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                Spotlight Game
               </span>
-              <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
-                +150 Steeze Points
+              <span class="px-2.5 py-0.5 rounded-full bg-start-lime text-start-ink font-mono font-bold text-[10px]">
+                ★ 4.9 RATING
+              </span>
+            </div>
+
+            <!-- Spotlight Thumbnail Art -->
+            <div class="relative h-48 rounded-2xl bg-gradient-to-tr from-amber-400 via-amber-300 to-yellow-200 p-6 overflow-hidden flex items-center justify-center border border-amber-500/20">
+              <div class="text-7xl card-art-zoom select-none">
+                🚌
+              </div>
+              <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-xs text-white text-[11px] font-mono px-2.5 py-1 rounded-xl flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 anim-live-pulse"></span>
+                <span>42 Playing Right Now</span>
+              </div>
+              <div class="absolute top-3 right-3 bg-white/90 dark:bg-black/80 text-start-ink dark:text-white text-[10px] font-bold px-2 py-0.5 rounded-lg shadow-2xs">
+                Action / Tower Defense
               </div>
             </div>
 
-            <!-- Confetti Particle Button -->
-            <button onclick="fireConfetti()" class="mt-2 text-[10px] px-2.5 py-1 rounded-full bg-start-lime text-start-ink font-bold hover:scale-105 active:scale-95 transition cursor-pointer">
-              🎉 Flex Drip
-            </button>
+            <!-- Card Body & Action -->
+            <div class="pt-4 flex flex-col gap-2">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xl font-black text-start-ink dark:text-start-paper">
+                  Danfo Defense
+                </h3>
+                <span class="text-xs font-mono text-start-muted">by @emmyanz</span>
+              </div>
+              <p class="text-xs text-start-muted dark:text-start-darkmuted line-clamp-2">
+                Defend your yellow bus through Oshodi roundabout against aggressive agberos, potholes, and Lagos traffic rush.
+              </p>
+
+              <div class="pt-3 mt-1 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
+                <div class="flex items-center gap-1 text-xs font-bold text-amber-500">
+                  <span>★★★★★</span>
+                  <span class="text-start-muted text-[11px] font-normal">(1,420 reviews)</span>
+                </div>
+                <button 
+                  onclick="launchQuickGame('Danfo Defense', '🚌')" 
+                  class="btn-whimsical px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-2xs group"
+                >
+                  <span>Play Now</span>
+                  <span class="icon-nudge font-bold">↗</span>
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
 
       </div>
 
-    </div>
-  </section>
+    </section>
 
-  <!-- WHIMSICAL SECTION 4: DAILY TOURNAMENT & LEADERBOARD -->
-  <section id="tournament" class="py-12 px-4 sm:px-8 max-w-7xl mx-auto">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <!-- TOURNAMENT BANNER (Daily Blitz shelf with countdown clock) -->
+    <section id="tournament" class="my-8 bg-gradient-to-r from-amber-400/15 via-start-lime/20 to-emerald-400/15 dark:from-amber-950/30 dark:via-emerald-950/30 dark:to-teal-950/30 rounded-3xl p-6 sm:p-8 border-2 border-start-line dark:border-start-darkline shadow-2xs">
+      <div class="flex flex-wrap items-center justify-between gap-6">
+        
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-amber-400 text-amber-950 flex items-center justify-center text-2xl shadow-xs shrink-0">
+            🏆
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">Daily Tournament</span>
+              <span class="px-2 py-0.5 rounded-full bg-rose-500 text-white font-bold text-[9px] uppercase">Ends Today</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black text-start-ink dark:text-start-paper">
+              Today's 5-Game Community Championship
+            </h2>
+          </div>
+        </div>
+
+        <!-- Animated Countdown Timer -->
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 font-mono text-center">
+            <div class="px-3 py-1.5 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline shadow-2xs">
+              <span id="countdown-hours" class="text-base font-black text-start-ink dark:text-start-paper">08</span>
+              <div class="text-[8px] uppercase tracking-wider text-start-muted">HRS</div>
+            </div>
+            <span class="font-bold text-start-muted">:</span>
+            <div class="px-3 py-1.5 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline shadow-2xs">
+              <span id="countdown-mins" class="text-base font-black text-start-ink dark:text-start-paper">42</span>
+              <div class="text-[8px] uppercase tracking-wider text-start-muted">MIN</div>
+            </div>
+            <span class="font-bold text-start-muted">:</span>
+            <div class="px-3 py-1.5 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline shadow-2xs">
+              <span id="countdown-secs" class="text-base font-black text-emerald-600 dark:text-start-lime">19</span>
+              <div class="text-[8px] uppercase tracking-wider text-start-muted">SEC</div>
+            </div>
+          </div>
+
+          <button 
+            onclick="enterDailyTournament()" 
+            class="btn-whimsical px-5 py-2.5 rounded-xl bg-start-lime text-start-ink font-bold text-xs shadow-2xs cursor-pointer shrink-0"
+          >
+            Enter (Free) ↗
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GAME SHELVES (Category Filters + Game Cards Grid) -->
+    <section id="games" class="py-8">
       
-      <!-- Tournament Brief -->
-      <div class="lg:col-span-7 bg-start-card dark:bg-start-darkcard rounded-3xl p-6 sm:p-8 border-2 border-start-line dark:border-start-darkline">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400 text-xs font-bold mb-3">
-          <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-          <span>Daily Tournament · 24-Hour Blitz</span>
+      <!-- Shelf Header & Category Filter Buttons -->
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black text-start-ink dark:text-start-paper">
+            Featured Community Games
+          </h2>
+          <p class="text-xs sm:text-sm text-start-muted dark:text-start-darkmuted">
+            Free to play in your browser. Pick a game and jump right into the action.
+          </p>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-black text-start-ink dark:text-start-paper mb-2">
-          Today's Battle: Danfo Defense & Jollof Rush
-        </h2>
-        <p class="text-xs sm:text-sm text-start-muted dark:text-slate-400 mb-6">
-          5 community games, 24 hours, one undisputed champion. No entry fee — just jump in and submit your top high score!
+
+        <!-- Filter Chips with microinteraction states -->
+        <div class="flex flex-wrap gap-1.5 text-xs font-bold" role="tablist" aria-label="Game categories">
+          <button 
+            onclick="setCategory('all', this)" 
+            class="filter-pill btn-whimsical px-3.5 py-1.5 rounded-xl bg-start-ink text-start-lime shadow-2xs cursor-pointer"
+            role="tab" 
+            aria-selected="true"
+          >
+            All Games (6)
+          </button>
+          <button 
+            onclick="setCategory('action', this)" 
+            class="filter-pill btn-whimsical px-3.5 py-1.5 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline hover:bg-black/5 text-start-ink dark:text-start-paper cursor-pointer"
+            role="tab" 
+            aria-selected="false"
+          >
+            Action & Rush
+          </button>
+          <button 
+            onclick="setCategory('cooking', this)" 
+            class="filter-pill btn-whimsical px-3.5 py-1.5 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline hover:bg-black/5 text-start-ink dark:text-start-paper cursor-pointer"
+            role="tab" 
+            aria-selected="false"
+          >
+            Cooking & Food
+          </button>
+          <button 
+            onclick="setCategory('arcade', this)" 
+            class="filter-pill btn-whimsical px-3.5 py-1.5 rounded-xl bg-start-card dark:bg-start-darkcard border border-start-line dark:border-start-darkline hover:bg-black/5 text-start-ink dark:text-start-paper cursor-pointer"
+            role="tab" 
+            aria-selected="false"
+          >
+            Retro & Arcade
+          </button>
+        </div>
+      </div>
+
+      <!-- SKELETON LOADING PREVIEW (Hidden by default, triggered on filter or via button) -->
+      <div id="skeleton-grid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col gap-4">
+          <div class="skeleton-box h-44 rounded-2xl w-full"></div>
+          <div class="skeleton-box h-5 w-3/4 rounded-lg"></div>
+          <div class="skeleton-box h-3 w-full rounded-md"></div>
+          <div class="skeleton-box h-3 w-1/2 rounded-md"></div>
+        </div>
+        <div class="bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col gap-4">
+          <div class="skeleton-box h-44 rounded-2xl w-full"></div>
+          <div class="skeleton-box h-5 w-3/4 rounded-lg"></div>
+          <div class="skeleton-box h-3 w-full rounded-md"></div>
+          <div class="skeleton-box h-3 w-1/2 rounded-md"></div>
+        </div>
+        <div class="bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col gap-4">
+          <div class="skeleton-box h-44 rounded-2xl w-full"></div>
+          <div class="skeleton-box h-5 w-3/4 rounded-lg"></div>
+          <div class="skeleton-box h-3 w-full rounded-md"></div>
+          <div class="skeleton-box h-3 w-1/2 rounded-md"></div>
+        </div>
+      </div>
+
+      <!-- EMPTY STATE (Shown when search/filter produces 0 results) -->
+      <div id="empty-state-box" class="hidden my-8 p-10 bg-start-card dark:bg-start-darkcard rounded-3xl border-2 border-dashed border-start-line dark:border-start-darkline text-center flex flex-col items-center justify-center">
+        <div class="w-16 h-16 rounded-3xl bg-start-lime/30 flex items-center justify-center text-3xl mb-3 anim-gentle-float">
+          🍲
+        </div>
+        <h3 class="text-lg font-black text-start-ink dark:text-start-paper mb-1">
+          No games found in the pot!
+        </h3>
+        <p class="text-xs text-start-muted dark:text-start-darkmuted max-w-sm mb-4">
+          We couldn't find any games matching that keyword. Try another name or clear your filters to view all 48 community games.
         </p>
-
-        <!-- Tournament Countdown Timer -->
-        <div class="flex items-center gap-3 font-mono text-center mb-6">
-          <div class="p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-start-line dark:border-start-darkline">
-            <span id="timer-hours" class="text-xl font-black text-start-ink dark:text-start-paper">08</span>
-            <div class="text-[9px] uppercase tracking-wider text-start-muted">Hours</div>
-          </div>
-          <span class="text-xl font-bold">:</span>
-          <div class="p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-start-line dark:border-start-darkline">
-            <span id="timer-minutes" class="text-xl font-black text-start-ink dark:text-start-paper">42</span>
-            <div class="text-[9px] uppercase tracking-wider text-start-muted">Mins</div>
-          </div>
-          <span class="text-xl font-bold">:</span>
-          <div class="p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-start-line dark:border-start-darkline">
-            <span id="timer-seconds" class="text-xl font-black text-start-ink dark:text-start-paper">19</span>
-            <div class="text-[9px] uppercase tracking-wider text-start-muted">Secs</div>
-          </div>
-        </div>
-
-        <button onclick="enterTournament()" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-start-lime text-start-ink font-black text-sm shadow-sm hover:bg-[#cbf55c] transition flex items-center justify-center gap-2 cursor-pointer">
-          <span>🏆 Enter Tournament Now (Free)</span>
+        <button 
+          onclick="resetSearchAndFilters()" 
+          class="btn-whimsical px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs cursor-pointer shadow-2xs"
+        >
+          Reset All Filters
         </button>
       </div>
 
-      <!-- Live Leaderboard -->
-      <div class="lg:col-span-5 bg-start-card dark:bg-start-darkcard rounded-3xl p-6 sm:p-8 border-2 border-start-line dark:border-start-darkline">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-black text-start-ink dark:text-start-paper flex items-center gap-2">
-            <span>🔥 Live Leaderboard</span>
-          </h3>
-          <span class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">● UPDATING</span>
-        </div>
+      <!-- GAME CARDS CONTAINER (With Smooth 3D Elevation & Microinteractions) -->
+      <div id="games-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <div class="flex flex-col gap-2.5">
-          <!-- Rank 1 -->
-          <div class="flex items-center justify-between p-2.5 rounded-2xl bg-amber-400/15 border border-amber-400/40 text-xs">
-            <div class="flex items-center gap-2.5">
-              <span class="text-base">🥇</span>
-              <span class="font-bold text-start-ink dark:text-start-paper">@fola_king</span>
-              <span class="text-[10px] bg-amber-400 text-start-ink font-bold px-1.5 py-0.2 rounded-md">PRO</span>
+        <!-- CARD 1: Danfo Defense -->
+        <article class="game-card-whimsical bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="action" data-title="Danfo Defense">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 p-4 overflow-hidden flex items-center justify-center border border-amber-500/20">
+              <span class="text-6xl card-art-zoom select-none" aria-hidden="true">🚌</span>
+              <span class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
+                🔥 POPULAR
+              </span>
+              <span class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 anim-live-pulse"></span>
+                42 Online
+              </span>
             </div>
-            <span class="font-mono font-bold text-amber-700 dark:text-amber-300">24,850 pts</span>
-          </div>
 
-          <!-- Rank 2 -->
-          <div class="flex items-center justify-between p-2.5 rounded-2xl bg-black/5 dark:bg-white/5 border border-start-line dark:border-start-darkline text-xs">
-            <div class="flex items-center gap-2.5">
-              <span class="text-base">🥈</span>
-              <span class="font-bold text-start-ink dark:text-start-paper">@chinex_99</span>
+            <div class="pt-4">
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition-colors">
+                  Danfo Defense
+                </h3>
+                <span class="text-xs font-bold text-amber-500">★ 4.9</span>
+              </div>
+              <p class="text-xs text-start-muted dark:text-start-darkmuted line-clamp-2">
+                Defend your yellow bus through Oshodi roundabout against potholes and rogue taxes.
+              </p>
             </div>
-            <span class="font-mono font-bold text-start-ink dark:text-start-paper">21,400 pts</span>
           </div>
 
-          <!-- Rank 3 -->
-          <div class="flex items-center justify-between p-2.5 rounded-2xl bg-black/5 dark:bg-white/5 border border-start-line dark:border-start-darkline text-xs">
-            <div class="flex items-center gap-2.5">
-              <span class="text-base">🥉</span>
-              <span class="font-bold text-start-ink dark:text-start-paper">@blessing_dev</span>
+          <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
+            <span class="text-[11px] font-mono text-start-muted">by @emmyanz</span>
+            <button 
+              onclick="launchQuickGame('Danfo Defense', '🚌')" 
+              class="btn-whimsical px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-2xs group"
+            >
+              <span>Play</span>
+              <span class="icon-nudge font-bold">↗</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- CARD 2: Jollof Rush -->
+        <article class="game-card-whimsical bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="cooking" data-title="Jollof Rush">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-500 p-4 overflow-hidden flex items-center justify-center border border-rose-500/20">
+              <span class="text-6xl card-art-zoom select-none" aria-hidden="true">🍲</span>
+              <span class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
+                🏆 STAFF PICK
+              </span>
+              <span class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 anim-live-pulse"></span>
+                28 Online
+              </span>
             </div>
-            <span class="font-mono font-bold text-start-ink dark:text-start-paper">19,820 pts</span>
+
+            <div class="pt-4">
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition-colors">
+                  Jollof Rush
+                </h3>
+                <span class="text-xs font-bold text-amber-500">★ 4.8</span>
+              </div>
+              <p class="text-xs text-start-muted dark:text-start-darkmuted line-clamp-2">
+                Cook authentic party jollof with secret spices. Catch the golden plantains before they burn!
+              </p>
+            </div>
           </div>
 
-          <!-- User Rank -->
-          <div class="mt-2 pt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between text-xs font-semibold text-start-muted">
-            <span>Your Current Rank: #14</span>
-            <span class="font-mono font-bold text-emerald-600">4,850 pts</span>
+          <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
+            <span class="text-[11px] font-mono text-start-muted">by @chef_tunde</span>
+            <button 
+              onclick="launchQuickGame('Jollof Rush', '🍲')" 
+              class="btn-whimsical px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-2xs group"
+            >
+              <span>Play</span>
+              <span class="icon-nudge font-bold">↗</span>
+            </button>
           </div>
-        </div>
+        </article>
+
+        <!-- CARD 3: Okada Speedrun -->
+        <article class="game-card-whimsical bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="action" data-title="Okada Speedrun">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-500 p-4 overflow-hidden flex items-center justify-center border border-sky-500/20">
+              <span class="text-6xl card-art-zoom select-none" aria-hidden="true">🏍️</span>
+              <span class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
+                ⚡ FAST PACED
+              </span>
+              <span class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 anim-live-pulse"></span>
+                35 Online
+              </span>
+            </div>
+
+            <div class="pt-4">
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition-colors">
+                  Okada Speedrun
+                </h3>
+                <span class="text-xs font-bold text-amber-500">★ 4.9</span>
+              </div>
+              <p class="text-xs text-start-muted dark:text-start-darkmuted line-clamp-2">
+                Weave through mainland traffic jams to deliver urgent parcels before the timer dings.
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
+            <span class="text-[11px] font-mono text-start-muted">by @naijadevs</span>
+            <button 
+              onclick="launchQuickGame('Okada Speedrun', '🏍️')" 
+              class="btn-whimsical px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-2xs group"
+            >
+              <span>Play</span>
+              <span class="icon-nudge font-bold">↗</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- CARD 4: Suya Night Market -->
+        <article class="game-card-whimsical bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="cooking" data-title="Suya Night Market">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-orange-600 to-red-600 p-4 overflow-hidden flex items-center justify-center border border-orange-500/20">
+              <span class="text-6xl card-art-zoom select-none" aria-hidden="true">🍢</span>
+              <span class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
+                🌶️ SPICY
+              </span>
+              <span class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 anim-live-pulse"></span>
+                19 Online
+              </span>
+            </div>
+
+            <div class="pt-4">
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition-colors">
+                  Suya Night Market
+                </h3>
+                <span class="text-xs font-bold text-amber-500">★ 4.7</span>
+              </div>
+              <p class="text-xs text-start-muted dark:text-start-darkmuted line-clamp-2">
+                Grill beef skewers at 11 PM in Maitama. Add onions and extra yaji pepper for tip multipliers.
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
+            <span class="text-[11px] font-mono text-start-muted">by @suya_master</span>
+            <button 
+              onclick="launchQuickGame('Suya Night Market', '🍢')" 
+              class="btn-whimsical px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-2xs group"
+            >
+              <span>Play</span>
+              <span class="icon-nudge font-bold">↗</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- CARD 5: Afrobeats Groove Tap -->
+        <article class="game-card-whimsical bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="arcade" data-title="Afrobeats Groove Tap">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-500 p-4 overflow-hidden flex items-center justify-center border border-purple-500/20">
+              <span class="text-6xl card-art-zoom select-none" aria-hidden="true">🥁</span>
+              <span class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
+                🎶 RHYTHM
+              </span>
+              <span class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 anim-live-pulse"></span>
+                31 Online
+              </span>
+            </div>
+
+            <div class="pt-4">
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition-colors">
+                  Afrobeats Groove Tap
+                </h3>
+                <span class="text-xs font-bold text-amber-500">★ 4.9</span>
+              </div>
+              <p class="text-xs text-start-muted dark:text-start-darkmuted line-clamp-2">
+                Tap the talking drums and bass kicks on beat. Chain combos to summon the dancing brass band!
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
+            <span class="text-[11px] font-mono text-start-muted">by @lagosbeats</span>
+            <button 
+              onclick="launchQuickGame('Afrobeats Groove Tap', '🥁')" 
+              class="btn-whimsical px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-2xs group"
+            >
+              <span>Play</span>
+              <span class="icon-nudge font-bold">↗</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- CARD 6: Lagos Traffic Hustle -->
+        <article class="game-card-whimsical bg-start-card dark:bg-start-darkcard rounded-3xl p-5 border-2 border-start-line dark:border-start-darkline flex flex-col justify-between group" data-category="arcade" data-title="Lagos Traffic Hustle">
+          <div>
+            <div class="relative h-44 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-400 p-4 overflow-hidden flex items-center justify-center border border-teal-500/20">
+              <span class="text-6xl card-art-zoom select-none" aria-hidden="true">🚦</span>
+              <span class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-start-ink text-start-lime text-[10px] font-mono font-bold">
+                ⭐ CLASSIC
+              </span>
+              <span class="absolute bottom-3 right-3 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-xs text-white text-[10px] font-mono font-bold flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 anim-live-pulse"></span>
+                23 Online
+              </span>
+            </div>
+
+            <div class="pt-4">
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-lg font-black text-start-ink dark:text-start-paper group-hover:text-emerald-600 dark:group-hover:text-start-lime transition-colors">
+                  Lagos Traffic Hustle
+                </h3>
+                <span class="text-xs font-bold text-amber-500">★ 4.8</span>
+              </div>
+              <p class="text-xs text-start-muted dark:text-start-darkmuted line-clamp-2">
+                Sell gala and chilled drinks to cars stuck on Third Mainland Bridge before the green light.
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-4 mt-2 border-t border-start-line dark:border-start-darkline flex items-center justify-between">
+            <span class="text-[11px] font-mono text-start-muted">by @galahustler</span>
+            <button 
+              onclick="launchQuickGame('Lagos Traffic Hustle', '🚦')" 
+              class="btn-whimsical px-4 py-2 rounded-xl bg-start-lime text-start-ink font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-2xs group"
+            >
+              <span>Play</span>
+              <span class="icon-nudge font-bold">↗</span>
+            </button>
+          </div>
+        </article>
+
       </div>
 
-    </div>
-  </section>
+    </section>
 
-  <!-- FOOTER: Authentic start.ng Footer with Community Links -->
-  <footer class="mt-16 border-t border-start-line dark:border-start-darkline bg-start-card dark:bg-start-darkcard py-12 px-4 sm:px-8 transition-colors">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-start-muted dark:text-slate-400">
+    <!-- THE HANGOUT SECTION (Virtual multiplayer park teaser) -->
+    <section id="hangout" class="py-10">
+      <div class="bg-start-card dark:bg-start-darkcard rounded-3xl p-6 sm:p-10 border-2 border-start-line dark:border-start-darkline shadow-xs">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <div class="lg:col-span-7 flex flex-col gap-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-xs font-bold w-max">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 anim-live-pulse"></span>
+              <span>Flagship Multiplayer Space</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black text-start-ink dark:text-start-paper">
+              The Hangout · Island Park 🌴
+            </h2>
+            <p class="text-xs sm:text-sm text-start-muted dark:text-start-darkmuted leading-relaxed">
+              The Hangout is start.ng's own 2D multiplayer park. Sign in as your 8-bit character, stroll across the green island, share high scores, and chat with other gamers in real-time.
+            </p>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button 
+                onclick="triggerHangoutSpeech()" 
+                class="btn-whimsical px-5 py-2.5 rounded-xl bg-start-lime text-start-ink font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              >
+                <span>💬 Shout in Park</span>
+              </button>
+              <button 
+                onclick="showDripModal()" 
+                class="btn-whimsical px-4 py-2.5 rounded-xl border border-start-line dark:border-start-darkline text-start-ink dark:text-start-paper font-bold text-xs cursor-pointer hover:bg-black/5"
+              >
+                <span>👕 Style Wardrobe</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Interactive Park Canvas Preview -->
+          <div class="lg:col-span-5 relative w-full h-56 rounded-2xl bg-gradient-to-b from-[#86efac] to-[#22c55e] dark:from-[#1b4332] dark:to-[#081c15] border-2 border-emerald-600/30 overflow-hidden shadow-inner flex items-center justify-center select-none">
+            
+            <!-- Speech Bubble Pop -->
+            <div id="hangout-bubble" class="absolute top-4 bg-white dark:bg-slate-900 px-3.5 py-1.5 rounded-xl border border-black/10 shadow-lg text-xs font-bold text-start-ink dark:text-white anim-gentle-float">
+              "Who dey breathe?! 🚀"
+            </div>
+
+            <!-- Avatars in Park -->
+            <div class="flex items-center gap-6 mt-6">
+              <div class="flex flex-col items-center">
+                <span class="text-3xl anim-gentle-float">😎</span>
+                <span class="text-[9px] font-mono font-bold bg-black/60 text-white px-1.5 py-0.5 rounded-md mt-1">Chukwu (You)</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <span class="text-3xl anim-gentle-float" style="animation-delay: -1.5s;">🧢</span>
+                <span class="text-[9px] font-mono font-bold bg-black/60 text-white px-1.5 py-0.5 rounded-md mt-1">Fola</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <span class="text-3xl anim-gentle-float" style="animation-delay: -3s;">👑</span>
+                <span class="text-[9px] font-mono font-bold bg-black/60 text-white px-1.5 py-0.5 rounded-md mt-1">Amaka</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CREATORS SECTION -->
+    <section id="creators" class="py-8 border-t border-start-line dark:border-start-darkline">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-start-ink dark:text-start-paper">
+            Open for Indie Creators 🛠️
+          </h2>
+          <p class="text-xs text-start-muted dark:text-start-darkmuted">
+            Push code to a public GitHub repo and publish your web game in minutes.
+          </p>
+        </div>
+        <button 
+          onclick="alert('To publish: push your HTML5/Vite game to GitHub and enter your repo URL on start.ng/docs')" 
+          class="btn-whimsical px-4 py-2.5 rounded-xl border border-start-line dark:border-start-darkline text-start-ink dark:text-start-paper font-bold text-xs hover:bg-black/5 cursor-pointer shadow-2xs"
+        >
+          Publish a Game ↗
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-start-line dark:border-start-darkline bg-start-card dark:bg-start-darkcard py-10 px-4 sm:px-8 mt-12 transition-colors">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-start-muted dark:text-start-darkmuted">
       
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-xl bg-start-lime flex items-center justify-center">
-          <svg class="w-4 h-4 text-start-ink ml-0.5" viewBox="0 0 24 24" fill="currentColor">
+        <div class="w-7 h-7 rounded-xl bg-start-lime flex items-center justify-center">
+          <svg class="w-3.5 h-3.5 text-start-ink ml-0.5" viewBox="0 0 24 24" fill="currentColor">
             <path d="M6 4.5v15c0 1.2 1.3 1.9 2.3 1.3l12-7.5c1-.6 1-2 0-2.6l-12-7.5C7.3 2.6 6 3.3 6 4.5z"/>
           </svg>
         </div>
@@ -924,14 +981,43 @@
       </div>
 
       <div class="text-[11px] text-center sm:text-right">
-        Whimsical Redesign for HNG Task 1 & Team Zendor.<br />
-        <a href="index.html" class="underline text-emerald-600 dark:text-start-lime font-bold">Return to Ziki Issues Dashboard</a>
+        Whimsical UI Enhancement for HNG Task 1.<br />
+        <a href="index.html" class="underline text-emerald-600 dark:text-start-lime font-bold">Return to Ziki Issue Tracker</a>
       </div>
 
     </div>
   </footer>
 
-  <!-- ================= INTERACTIVE JAVASCRIPT ================= -->
+  <!-- QUICK PLAY MODAL (Accessible In-Browser Game Player) -->
+  <dialog id="game-modal" class="p-0 rounded-3xl bg-start-card dark:bg-start-darkcard border-2 border-start-line dark:border-start-darkline shadow-2xl backdrop:bg-black/60 max-w-lg w-full m-auto">
+    <div class="p-6">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-start-line dark:border-start-darkline">
+        <div class="flex items-center gap-2">
+          <span id="modal-game-icon" class="text-2xl">🚌</span>
+          <h3 id="modal-game-title" class="text-lg font-black text-start-ink dark:text-start-paper">Danfo Defense</h3>
+        </div>
+        <button onclick="closeQuickGame()" class="p-1.5 rounded-lg hover:bg-black/5 text-start-muted text-sm font-bold cursor-pointer" aria-label="Close modal">✕</button>
+      </div>
+      
+      <div class="relative w-full h-56 rounded-2xl bg-start-ink text-white flex flex-col items-center justify-center p-4 text-center overflow-hidden">
+        <div class="text-4xl mb-2 animate-bounce">🕹️</div>
+        <div class="text-sm font-mono font-bold text-start-lime mb-1">GAME LAUNCH READY</div>
+        <p class="text-xs text-slate-300 max-w-xs mb-4">
+          Instant browser instance booted with zero downloads. Controls: Arrow keys or tap screen.
+        </p>
+        <button onclick="alert('Enjoy the game!'); closeQuickGame();" class="btn-whimsical px-6 py-2.5 rounded-xl bg-start-lime text-start-ink font-black text-xs uppercase font-mono cursor-pointer">
+          ▶ Start Play Session
+        </button>
+      </div>
+
+      <div class="mt-4 flex items-center justify-between text-xs text-start-muted">
+        <span>Runs at 60 FPS in canvas</span>
+        <button onclick="closeQuickGame()" class="hover:underline cursor-pointer">Back to Games</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- JAVASCRIPT: Purposeful Microinteractions & State Handlers -->
   <script>
     /* Theme Toggle */
     function toggleTheme() {
@@ -940,30 +1026,28 @@
       const next = current === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-theme', next);
       document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+      playChime(640);
     }
 
-    /* Web Audio API Sound Synthesizer (Zero asset dependency retro sounds!) */
+    /* Web Audio API Synthesizer (Micro-haptic chimes for interactions) */
     let audioCtx = null;
-    let isBgmPlaying = false;
+    let audioEnabled = true;
 
-    function getAudioCtx() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+    function getAudioContext() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       return audioCtx;
     }
 
-    function playBlip(freq = 440, type = 'square', duration = 0.08) {
+    function playChime(freq = 520, duration = 0.08) {
+      if (!audioEnabled) return;
       try {
-        const ctx = getAudioCtx();
+        const ctx = getAudioContext();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = type;
+        osc.type = 'triangle';
         osc.frequency.setValueAtTime(freq, ctx.currentTime);
-        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -972,405 +1056,136 @@
       } catch (e) {}
     }
 
-    function toggleBgm() {
-      isBgmPlaying = !isBgmPlaying;
-      const label = document.getElementById('sound-label');
-      const icon = document.getElementById('sound-icon');
-      if (isBgmPlaying) {
-        icon.textContent = '🔊';
-        label.textContent = 'Jukebox: ON';
-        playBlip(523.25, 'sine', 0.2);
-        setTimeout(() => playBlip(659.25, 'sine', 0.2), 150);
-        setTimeout(() => playBlip(783.99, 'sine', 0.3), 300);
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      document.getElementById('audio-icon').textContent = audioEnabled ? '🔊' : '🔇';
+      document.getElementById('audio-text').textContent = audioEnabled ? 'Audio: ON' : 'Audio: OFF';
+    }
+
+    /* Search & Category Filter Interaction */
+    function setCategory(cat, btn) {
+      playChime(480);
+      document.querySelectorAll('.filter-pill').forEach(b => {
+        b.classList.remove('bg-start-ink', 'text-start-lime');
+        b.classList.add('bg-start-card', 'text-start-ink');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.remove('bg-start-card', 'text-start-ink');
+      btn.classList.add('bg-start-ink', 'text-start-lime');
+      btn.setAttribute('aria-selected', 'true');
+
+      filterCards(cat, document.getElementById('game-search-input').value);
+    }
+
+    function handleSearch(query) {
+      filterCards('current', query);
+    }
+
+    function filterCards(category, query) {
+      const cards = document.querySelectorAll('#games-container article');
+      let visibleCount = 0;
+      const lowerQuery = (query || '').toLowerCase().trim();
+
+      // Find active category
+      let activeCat = category;
+      if (activeCat === 'current') {
+        const activeBtn = document.querySelector('.filter-pill[aria-selected="true"]');
+        activeCat = activeBtn ? activeBtn.getAttribute('onclick').match(/'([^']+)'/)[1] : 'all';
+      }
+
+      cards.forEach(card => {
+        const matchesCategory = activeCat === 'all' || card.getAttribute('data-category') === activeCat;
+        const matchesSearch = !lowerQuery || card.getAttribute('data-title').toLowerCase().includes(lowerQuery);
+
+        if (matchesCategory && matchesSearch) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // Toggle Empty State
+      const emptyState = document.getElementById('empty-state-box');
+      if (visibleCount === 0) {
+        emptyState.classList.remove('hidden');
       } else {
-        icon.textContent = '🔇';
-        label.textContent = 'Jukebox: OFF';
+        emptyState.classList.add('hidden');
       }
     }
 
-    /* Danfo Horn Blaster */
-    function honkDanfoHorn() {
-      playBlip(320, 'sawtooth', 0.18);
-      setTimeout(() => playBlip(320, 'sawtooth', 0.22), 160);
-      // Particle burst
+    function resetSearchAndFilters() {
+      document.getElementById('game-search-input').value = '';
+      const allBtn = document.querySelector('.filter-pill');
+      if (allBtn) setCategory('all', allBtn);
+    }
+
+    /* Skeleton Loading State Preview */
+    function toggleSkeletonPreview() {
+      const skel = document.getElementById('skeleton-grid');
+      const container = document.getElementById('games-container');
+      skel.classList.toggle('hidden');
+      container.classList.toggle('hidden');
+      playChime(580);
+      if (!skel.classList.contains('hidden')) {
+        setTimeout(() => {
+          skel.classList.add('hidden');
+          container.classList.remove('hidden');
+        }, 2200);
+      }
+    }
+
+    /* Quick Game Modal Launcher */
+    function launchQuickGame(name, icon) {
+      playChime(700);
+      document.getElementById('modal-game-title').textContent = name;
+      document.getElementById('modal-game-icon').textContent = icon;
+      const modal = document.getElementById('game-modal');
+      if (modal && modal.showModal) modal.showModal();
+    }
+
+    function closeQuickGame() {
+      playChime(380);
+      const modal = document.getElementById('game-modal');
+      if (modal && modal.close) modal.close();
+    }
+
+    /* Daily Tournament Action with Confetti */
+    function enterDailyTournament() {
+      playChime(880, 0.15);
       if (window.confetti) {
-        confetti({ particleCount: 15, spread: 40, origin: { y: 0.6 } });
-      }
-    }
-
-    /* ================= LIVE DANFO ARCADE CANVAS MINI-GAME ================= */
-    const canvas = document.getElementById('arcade-canvas');
-    const ctx = canvas.getContext('2d');
-    let gameLoopId = null;
-    let gameRunning = false;
-    let danfoX = 175;
-    let danfoSpeed = 0;
-    let score = 0;
-    let passengers = 0;
-    let obstacles = [];
-    let roadOffset = 0;
-
-    function startArcadeGame() {
-      document.getElementById('arcade-overlay').classList.add('hidden');
-      gameRunning = true;
-      score = 0;
-      passengers = 0;
-      danfoX = 175;
-      obstacles = [];
-      updateHUD();
-      playBlip(600, 'triangle', 0.15);
-      if (gameLoopId) cancelAnimationFrame(gameLoopId);
-      gameLoop();
-    }
-
-    function steerDanfo(dir) {
-      if (!gameRunning) startArcadeGame();
-      danfoX = Math.max(30, Math.min(340, danfoX + dir * 35));
-      playBlip(400, 'square', 0.05);
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') steerDanfo(-1);
-      if (e.key === 'ArrowRight') steerDanfo(1);
-    });
-
-    function gameLoop() {
-      if (!gameRunning) return;
-
-      // Update road scroll
-      roadOffset = (roadOffset + 4) % 40;
-      score += 1;
-      if (score % 20 === 0) updateHUD();
-
-      // Spawn obstacles (Potholes, agberos, passengers)
-      if (Math.random() < 0.035) {
-        const types = ['pothole', 'passenger', 'coin'];
-        const chosen = types[Math.floor(Math.random() * types.length)];
-        obstacles.push({
-          x: Math.random() * 280 + 40,
-          y: -30,
-          type: chosen,
-          speed: 3 + Math.random() * 2
+        confetti({
+          particleCount: 45,
+          spread: 60,
+          origin: { y: 0.6 }
         });
       }
-
-      // Clear & Draw Road
-      ctx.fillStyle = '#1e241c';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Road markings (yellow dashes)
-      ctx.fillStyle = '#facc15';
-      ctx.fillRect(10, 0, 8, canvas.height);
-      ctx.fillRect(canvas.width - 18, 0, 8, canvas.height);
-
-      // Center dashed line
-      ctx.fillStyle = '#ffffff';
-      for (let y = roadOffset - 40; y < canvas.height; y += 40) {
-        ctx.fillRect(195, y, 10, 24);
-      }
-
-      // Draw Obstacles & Check Collisions
-      for (let i = obstacles.length - 1; i >= 0; i--) {
-        const ob = obstacles[i];
-        ob.y += ob.speed;
-
-        if (ob.type === 'pothole') {
-          // Pothole circle
-          ctx.fillStyle = '#0a0d08';
-          ctx.beginPath();
-          ctx.ellipse(ob.x, ob.y, 16, 10, 0, 0, Math.PI * 2);
-          ctx.fill();
-        } else if (ob.type === 'passenger') {
-          // Passenger emoji
-          ctx.font = '20px sans-serif';
-          ctx.fillText('🧍', ob.x - 10, ob.y);
-        } else if (ob.type === 'coin') {
-          // Yellow Naira coin
-          ctx.fillStyle = '#facc15';
-          ctx.beginPath();
-          ctx.arc(ob.x, ob.y, 10, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = '#1c1d17';
-          ctx.font = 'bold 10px monospace';
-          ctx.fillText('₦', ob.x - 4, ob.y + 4);
-        }
-
-        // Collision with Danfo
-        const danfoY = 195;
-        const dist = Math.hypot(danfoX - ob.x, danfoY - ob.y);
-        if (dist < 26) {
-          if (ob.type === 'pothole') {
-            // Hit pothole!
-            playBlip(150, 'sawtooth', 0.25);
-            gameOver();
-            return;
-          } else if (ob.type === 'passenger') {
-            // Picked up passenger!
-            passengers = Math.min(5, passengers + 1);
-            score += 150;
-            playBlip(800, 'triangle', 0.1);
-            obstacles.splice(i, 1);
-            updateHUD();
-            continue;
-          } else if (ob.type === 'coin') {
-            // Picked up coin!
-            score += 100;
-            playBlip(980, 'sine', 0.08);
-            obstacles.splice(i, 1);
-            updateHUD();
-            continue;
-          }
-        }
-
-        // Remove offscreen
-        if (ob.y > canvas.height + 40) {
-          obstacles.splice(i, 1);
-        }
-      }
-
-      // Draw Player: Yellow Danfo Bus
-      const busW = 42;
-      const busH = 55;
-      const busY = 185;
-
-      // Shadow
-      ctx.fillStyle = 'rgba(0,0,0,0.4)';
-      ctx.beginPath();
-      ctx.roundRect(danfoX - busW / 2 + 3, busY + 3, busW, busH, 8);
-      ctx.fill();
-
-      // Yellow Danfo Body
-      ctx.fillStyle = '#facc15';
-      ctx.beginPath();
-      ctx.roundRect(danfoX - busW / 2, busY, busW, busH, 8);
-      ctx.fill();
-
-      // Black Twin Stripes
-      ctx.fillStyle = '#1c1d17';
-      ctx.fillRect(danfoX - busW / 2 + 5, busY + 12, busW - 10, 4);
-      ctx.fillRect(danfoX - busW / 2 + 5, busY + 22, busW - 10, 4);
-
-      // Windshield
-      ctx.fillStyle = '#38bdf8';
-      ctx.beginPath();
-      ctx.roundRect(danfoX - busW / 2 + 6, busY + 4, busW - 12, 12, 3);
-      ctx.fill();
-
-      // Headlights
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(danfoX - busW / 2 + 4, busY + 2, 6, 3);
-      ctx.fillRect(danfoX + busW / 2 - 10, busY + 2, 6, 3);
-
-      gameLoopId = requestAnimationFrame(gameLoop);
+      alert('🏆 You have entered Today\'s Tournament!\nPlay any of the 5 featured games to submit your live score.');
     }
 
-    function updateHUD() {
-      document.getElementById('arcade-score').textContent = score;
-      document.getElementById('arcade-passengers').textContent = passengers;
-    }
-
-    function gameOver() {
-      gameRunning = false;
-      const overlay = document.getElementById('arcade-overlay');
-      overlay.classList.remove('hidden');
-      overlay.innerHTML = `
-        <div class="text-3xl mb-1">💥</div>
-        <h3 class="text-lg font-black text-rose-500 font-pixel tracking-wider mb-1">POTHOLE HIT!</h3>
-        <p class="text-xs text-slate-300 mb-2">Final Score: <b class="text-start-lime">${score} pts</b> · Passengers: <b>${passengers}</b></p>
-        <button onclick="startArcadeGame()" class="px-5 py-2.5 rounded-xl bg-start-lime text-start-ink font-bold text-xs uppercase tracking-wider font-mono shadow-md hover:scale-105 active:scale-95 transition cursor-pointer">
-          🔄 RE-IGNITE ENGINE
-        </button>
-      `;
-    }
-
-    /* ================= THE HANGOUT PARK 2D CANVAS SIMULATOR ================= */
-    const hangoutCanvas = document.getElementById('hangout-canvas');
-    const hCtx = hangoutCanvas.getContext('2d');
-    
-    let avatars = [
-      { id: 1, name: 'Chukwu (You)', emoji: '😎', x: 200, y: 150, targetX: 200, targetY: 150, isPlayer: true },
-      { id: 2, name: 'Fola', emoji: '🧢', x: 400, y: 100, targetX: 420, targetY: 120, isPlayer: false },
-      { id: 3, name: 'Amaka', emoji: '👒', x: 550, y: 180, targetX: 520, targetY: 160, isPlayer: false },
-      { id: 4, name: 'Tunde', emoji: '🎧', x: 120, y: 220, targetX: 140, targetY: 200, isPlayer: false },
-      { id: 5, name: 'Zino', emoji: '👑', x: 680, y: 90, targetX: 660, targetY: 110, isPlayer: false },
-    ];
-
-    function drawHangout() {
-      hCtx.clearRect(0, 0, hangoutCanvas.width, hangoutCanvas.height);
-
-      // Park Grass & Stone Pathways
-      hCtx.fillStyle = '#34d399';
-      hCtx.fillRect(0, 0, hangoutCanvas.width, hangoutCanvas.height);
-
-      // Stone path
-      hCtx.fillStyle = '#e2e8f0';
-      hCtx.fillRect(0, 140, hangoutCanvas.width, 36);
-      hCtx.fillRect(360, 0, 36, hangoutCanvas.height);
-
-      // Palm Trees
-      drawPalm(80, 70);
-      drawPalm(260, 240);
-      drawPalm(480, 60);
-      drawPalm(720, 220);
-
-      // Fountain / Pond in Center
-      hCtx.fillStyle = '#38bdf8';
-      hCtx.beginPath();
-      hCtx.arc(380, 160, 28, 0, Math.PI * 2);
-      hCtx.fill();
-      hCtx.strokeStyle = '#0284c7';
-      hCtx.lineWidth = 4;
-      hCtx.stroke();
-
-      // Render Avatars
-      avatars.forEach(a => {
-        // Move towards target
-        a.x += (a.targetX - a.x) * 0.05;
-        a.y += (a.targetY - a.y) * 0.05;
-
-        // Shadow
-        hCtx.fillStyle = 'rgba(0,0,0,0.2)';
-        hCtx.beginPath();
-        hCtx.ellipse(a.x, a.y + 12, 12, 5, 0, 0, Math.PI * 2);
-        hCtx.fill();
-
-        // Sprite
-        hCtx.font = '24px sans-serif';
-        hCtx.fillText(a.emoji, a.x - 12, a.y + 8);
-
-        // Name Tag
-        hCtx.fillStyle = a.isPlayer ? '#d8fd71' : '#ffffff';
-        hCtx.font = 'bold 9px monospace';
-        const tw = hCtx.measureText(a.name).width;
-        hCtx.fillStyle = 'rgba(0,0,0,0.7)';
-        hCtx.roundRect(a.x - tw / 2 - 4, a.y - 20, tw + 8, 14, 4);
-        hCtx.fill();
-        hCtx.fillStyle = a.isPlayer ? '#d8fd71' : '#ffffff';
-        hCtx.fillText(a.name, a.x - tw / 2, a.y - 10);
-      });
-
-      requestAnimationFrame(drawHangout);
-    }
-
-    function drawPalm(x, y) {
-      hCtx.fillStyle = '#78350f';
-      hCtx.fillRect(x - 4, y, 8, 30);
-      hCtx.font = '28px sans-serif';
-      hCtx.fillText('🌴', x - 14, y);
-    }
-
-    hangoutCanvas.addEventListener('click', (e) => {
-      const rect = hangoutCanvas.getBoundingClientRect();
-      const clickX = ((e.clientX - rect.left) / rect.width) * hangoutCanvas.width;
-      const clickY = ((e.clientY - rect.top) / rect.height) * hangoutCanvas.height;
-
-      // Move player avatar
-      const player = avatars[0];
-      player.targetX = clickX;
-      player.targetY = clickY;
-      playBlip(550, 'triangle', 0.06);
-    });
-
-    drawHangout();
-
-    /* Hangout Interactions */
-    const naijaQuotes = [
+    /* The Hangout Speech Bubble Generator */
+    const parkQuotes = [
       "Who dey breathe?! 🚀",
       "Up Nepa! ⚡",
-      "Danfo Defense score: 4,850! Beat that!",
-      "Party jollof with dodo is elite.",
-      "No carry last! 🏆",
-      "Good vibes only on start.ng!"
+      "Danfo Defense score: 4,850 pts!",
+      "Party jollof with dodo is elite 🍲",
+      "Good vibes only on start.ng ✨"
     ];
-
-    function sayHangoutQuote() {
-      const toast = document.getElementById('hangout-speech-bubble');
-      const randomQuote = naijaQuotes[Math.floor(Math.random() * naijaQuotes.length)];
-      toast.textContent = `"${randomQuote}"`;
-      toast.classList.remove('hidden');
-      playBlip(720, 'sine', 0.1);
-      setTimeout(() => toast.classList.add('hidden'), 3500);
-    }
-
-    function sendHangoutReaction(emoji) {
-      const toast = document.getElementById('hangout-speech-bubble');
-      toast.textContent = `${emoji} ${emoji} ${emoji}`;
-      toast.classList.remove('hidden');
-      playBlip(880, 'sine', 0.1);
+    function triggerHangoutSpeech() {
+      playChime(750, 0.1);
+      const bubble = document.getElementById('hangout-bubble');
+      const random = parkQuotes[Math.floor(Math.random() * parkQuotes.length)];
+      bubble.textContent = `"${random}"`;
       if (window.confetti) {
-        confetti({ particleCount: 20, spread: 50, origin: { y: 0.7 } });
-      }
-      setTimeout(() => toast.classList.add('hidden'), 2500);
-    }
-
-    /* Drip Studio Customizer */
-    const outfits = {
-      danfo: { name: 'Danfo Conductor', emoji: '😎' },
-      agbada: { name: 'Emerald Agbada', emoji: '👑' },
-      cyber: { name: 'Cyber Y2K Hoodie', emoji: '⚡' },
-    };
-
-    function changeOutfit(key) {
-      const o = outfits[key];
-      if (!o) return;
-      document.getElementById('wardrobe-avatar-display').textContent = o.emoji;
-      document.getElementById('wardrobe-outfit-name').textContent = o.name;
-      document.getElementById('nav-avatar-emoji').textContent = o.emoji;
-      avatars[0].emoji = o.emoji;
-      playBlip(650, 'triangle', 0.12);
-    }
-
-    function randomizeDrip() {
-      const emojis = ['😎', '👑', '⚡', '🤠', '🥷', '🤖', '🦊', '🚀'];
-      const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-      document.getElementById('wardrobe-avatar-display').textContent = randomEmoji;
-      document.getElementById('nav-avatar-emoji').textContent = randomEmoji;
-      avatars[0].emoji = randomEmoji;
-      playBlip(750, 'square', 0.1);
-      if (window.confetti) confetti({ particleCount: 25, spread: 45 });
-    }
-
-    function fireConfetti() {
-      playBlip(900, 'sine', 0.15);
-      if (window.confetti) {
-        confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+        confetti({ particleCount: 20, spread: 40, origin: { y: 0.7 } });
       }
     }
 
-    function spinLuckyWheel() {
-      playBlip(500, 'square', 0.05);
-      setTimeout(() => playBlip(600, 'square', 0.05), 100);
-      setTimeout(() => playBlip(700, 'square', 0.05), 200);
-      setTimeout(() => playBlip(900, 'triangle', 0.2), 350);
-      if (window.confetti) confetti({ particleCount: 40, spread: 60 });
-      alert("🎡 Lucky Spin Result: You unlocked +250 EXP and a Golden Danfo Bus skin!");
-    }
-
-    function launchGameModal(name, icon) {
-      playBlip(600, 'sine', 0.1);
-      alert(`🕹️ Launching "${name}" ${icon} in fullscreen browser mode!\nNo downloads needed.`);
-    }
-
-    function enterTournament() {
-      playBlip(800, 'triangle', 0.2);
-      if (window.confetti) confetti({ particleCount: 50, spread: 80 });
-      alert("🏆 You are successfully entered into Today's 24-Hour Tournament!\nPlay Danfo Defense or Jollof Rush to submit your score.");
-    }
-
-    function filterShelf(category) {
-      const cards = document.querySelectorAll('#games-grid .whimsical-card');
-      cards.forEach(c => {
-        if (category === 'all' || c.getAttribute('data-category') === category) {
-          c.classList.remove('hidden');
-        } else {
-          c.classList.add('hidden');
-        }
-      });
-    }
-
-    function openWardrobeModal() {
-      const wardrobe = document.getElementById('wardrobe');
-      if (wardrobe) wardrobe.scrollIntoView({ behavior: 'smooth' });
+    function showDripModal() {
+      playChime(620);
+      const emojis = ['😎', '👑', '🧢', '👒', '🎧', '⚡', '🤠'];
+      const nextEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+      document.getElementById('user-avatar-badge').textContent = nextEmoji;
     }
   </script>
 
