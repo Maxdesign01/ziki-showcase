@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start.ng: The Intern's Quest Map — Whimsical Stage RPG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti for the whimsical celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Whimsical Stage Path Floating & Bouncing */
+    @keyframes bob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-5deg); }
+      75% { transform: rotate(5deg); }
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    @keyframes shield-glow {
+      0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
+      50% { box-shadow: 0 0 35px rgba(6, 182, 212, 0.8); }
+    }
+    
+    .anim-bob { animation: bob 3s ease-in-out infinite; }
+    .anim-wiggle { animation: wiggle 2s ease-in-out infinite; }
+    .pulse-ring { animation: pulse-ring 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .shield-active { animation: shield-glow 2s ease-in-out infinite; }
+    
+    /* Dotted quest line */
+    .quest-trail {
+      background-image: radial-gradient(circle, #38bdf8 2.5px, transparent 2.5px);
+      background-size: 16px 16px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .anim-bob, .anim-wiggle, .pulse-ring, .shield-active {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-[#0b1329] text-slate-100 min-h-screen selection:bg-amber-400 selection:text-slate-900 overflow-x-hidden">
+
+  <!-- TOP HUD: Intern Adventure Bar -->
+  <header class="sticky top-0 z-40 bg-[#0e1938]/90 backdrop-blur-md border-b border-sky-900/50 px-4 sm:px-8 py-3.5">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Game Title -->
+      <div class="flex items-center gap-3">
+        <a href="https://ziki-showcase.vercel.app/" class="flex items-center gap-2 group">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 via-rose-500 to-indigo-500 p-0.5 shadow-lg shadow-rose-500/20 group-hover:scale-105 transition">
+            <div class="w-full h-full bg-[#0b1329] rounded-[14px] flex items-center justify-center font-black text-amber-400 text-lg">
+              S!
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-base tracking-tight text-white">Start.ng Quest</span>
+              <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 font-bold border border-amber-400/30">
+                Season 11
+              </span>
+            </div>
+            <div class="text-[11px] text-slate-400">The 10-Stage Internship Odyssey</div>
+          </div>
+        </a>
+
+        <div class="hidden md:block h-6 w-px bg-slate-800 ml-2"></div>
+        <a href="index.html" class="hidden md:inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-white bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700 transition">
+          <span>←</span> Back to Ziki Dashboard
+        </a>
+      </div>
+
+      <!-- Live Gamified RPG Stats -->
+      <div class="flex flex-wrap items-center gap-2 sm:gap-4 text-xs font-semibold">
+        
+        <!-- Energy Meter -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300">
+          <span class="text-sm">☕</span>
+          <div class="flex flex-col">
+            <span class="text-[9px] uppercase tracking-wider text-slate-400 font-mono">Caffeine Level</span>
+            <div class="w-16 sm:w-20 h-2 rounded-full bg-slate-800 overflow-hidden mt-0.5">
+              <div class="h-full bg-gradient-to-r from-amber-500 to-emerald-400 rounded-full w-[85%]"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Eviction Shield Button -->
+        <button 
+          id="shield-toggle-btn"
+          onclick="toggleEvictionShield()"
+          class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-cyan-500/40 bg-cyan-950/40 text-cyan-300 hover:bg-cyan-900/40 transition cursor-pointer shadow-xs shield-active"
+        >
+          <span class="text-sm" aria-hidden="true">🛡️</span>
+          <span class="hidden sm:inline">Eviction Shield:</span>
+          <span id="shield-status-text" class="font-bold text-cyan-400">ARMED</span>
+        </button>
+
+        <!-- Current Points -->
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-300">
+          <span class="text-sm">🪙</span>
+          <span id="player-score" class="font-bold font-mono text-sm tabular-nums">4,850</span>
+          <span class="text-[10px] text-amber-400/70 font-mono">EXP</span>
+        </div>
+
+        <!-- Sound Toggle -->
+        <button 
+          onclick="toggleAudio()"
+          class="p-2 rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition cursor-pointer"
+          title="Toggle 8-bit sound effects"
+        >
+          <span id="sound-icon">🔊</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- HERO SECTION: The Quest World Entrance -->
+  <section class="relative pt-12 pb-10 px-4 text-center overflow-hidden">
+    <!-- Ambient glowing nebula backdrops -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-sky-600/20 via-indigo-600/20 to-rose-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-3xl mx-auto relative z-10 space-y-4">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 border border-sky-400/30 text-sky-300 text-xs font-mono font-bold">
+        <span>🎮</span>
+        <span>INTERACTIVE WHIMSICAL EXPERIENCE</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+        The Intern's Odyssey: <br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-rose-400 to-sky-400">
+          From Seedling to Citadel
+        </span>
+      </h1>
+
+      <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+        10,000 interns enter Stage 1. Only the most resourceful survive the CSS swamps, Postgres dragons, and midnight eviction lightning to reach Stage 10.
+      </p>
+
+      <!-- Quick Interactive Actions -->
+      <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+        <a 
+          href="#quest-map" 
+          class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white text-xs font-bold shadow-lg shadow-sky-500/25 transition cursor-pointer flex items-center gap-2"
+        >
+          <span>Explore 10 Stages</span>
+          <span>↓</span>
+        </a>
+
+        <button 
+          onclick="openPassModal()" 
+          class="px-5 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-amber-300 text-xs font-bold transition cursor-pointer flex items-center gap-2"
+        >
+          <span>🪪 Generate Intern Pass</span>
+          <span>✨</span>
+        </button>
+
+        <button 
+          onclick="triggerConfetti()" 
+          class="px-4 py-2.5 rounded-xl border border-slate-800 hover:bg-slate-800 text-xs font-semibold text-slate-300 transition cursor-pointer"
+        >
+          🎉 Fire Confetti
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE MINI-GAME: BUG SQUEEZER -->
+  <section class="max-w-4xl mx-auto px-4 pb-12">
+    <div class="p-5 rounded-2xl border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-slate-900/60 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5">
+        <div class="w-12 h-12 rounded-2xl bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-2xl anim-wiggle">
+          🔨
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-sm text-white">Daily Bug Squeezer Arena</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold">Live Event</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">Bugs have invaded Stage 3! Click them to earn bonus bounty EXP for your squad.</p>
+        </div>
+      </div>
+
+      <!-- Bug Spawner Area -->
+      <div id="bug-playfield" class="flex items-center gap-3">
+        <button 
+          onclick="squishBug(this)" 
+          class="p-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 border border-rose-500/40 text-xl hover:scale-125 transition active:scale-95 cursor-pointer"
+          title="Click to squish!"
+        >
+          🐛
+        </button>
+        <button 
+          onclick="squishBug(this)" 
+          class="p-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 border border-rose-500/40 text-xl hover:scale-125 transition active:scale-95 cursor-pointer"
+          title="Click to squish!"
+        >
+          🪲
+        </button>
+        <button 
+          onclick="squishBug(this)" 
+          class="p-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 border border-rose-500/40 text-xl hover:scale-125 transition active:scale-95 cursor-pointer"
+          title="Click to squish!"
+        >
+          🦟
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- THE 10 STAGES SERPENTINE QUEST WORLD MAP (The Whimsical Core) -->
+  <!-- ============================================================== -->
+  <main id="quest-map" class="max-w-5xl mx-auto px-4 pb-24">
+    
+    <div class="text-center mb-12">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-white">The Trail of 10 Stages</h2>
+      <p class="text-xs sm:text-sm text-slate-400 mt-1">Click any stage milestone to inspect requirements, dangers, and survival perks.</p>
+    </div>
+
+    <!-- The Vertical Zig-Zag Trail -->
+    <div class="relative space-y-12">
+      
+      <!-- Central dotted trail line -->
+      <div class="absolute left-1/2 top-4 bottom-4 -translate-x-1/2 w-1 border-r-2 border-dashed border-sky-500/30 hidden md:block" aria-hidden="true"></div>
+
+      <!-- ============================================== -->
+      <!-- BIOME 1: THE SEEDLING GLADE (Stages 1 & 2)     -->
+      <!-- ============================================== -->
+
+      <!-- STAGE 1: Git Glade -->
+      <div class="relative flex flex-col md:flex-row items-center gap-6 group">
+        <div class="w-full md:w-1/2 md:pr-10 md:text-right order-2 md:order-1">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold border border-emerald-500/30">
+            <span>BIOME: THE GLADE</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mt-1">Stage 1: Git Glade & First Commit</h3>
+          <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
+            Configure your SSH keys and make your first verified commit. Beware the dreaded detached HEAD specter in the fog!
+          </p>
+          <div class="mt-3 flex flex-wrap md:justify-end gap-2 text-[11px] font-mono">
+            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">git commit -m "init"</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold">+100 EXP</span>
+          </div>
+        </div>
+
+        <!-- Node Icon -->
+        <div class="relative z-10 w-16 h-16 rounded-3xl bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 shadow-xl shadow-emerald-500/20 shrink-0 anim-bob order-1 md:order-2">
+          <button 
+            onclick="inspectStage(1, 'Git Glade', 'Stage 1 filters out 4,000 interns who cannot configure SSH keys or push a verified Markdown file.', '✅ First Commit Verified', '+100 EXP')" 
+            class="w-full h-full bg-[#0e1938] hover:bg-emerald-950/60 rounded-[22px] flex items-center justify-center text-2xl transition cursor-pointer"
+            aria-label="Inspect Stage 1"
+          >
+            🌱
+          </button>
+          <span class="absolute -top-2 -right-2 px-1.5 py-0.2 rounded-full bg-emerald-500 text-[10px] font-black text-white font-mono">1</span>
+        </div>
+
+        <div class="w-full md:w-1/2 md:pl-10 order-3">
+          <div class="p-3.5 rounded-2xl border border-slate-800 bg-slate-900/60 text-xs text-slate-300 space-y-1">
+            <div class="font-bold text-emerald-400 flex items-center gap-1">
+              <span>✓ Passed Milestone</span>
+            </div>
+            <p class="text-slate-400 text-[11px]">8,420 interns survived this round.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 2: Terminal Beach -->
+      <div class="relative flex flex-col md:flex-row items-center gap-6 group">
+        <div class="w-full md:w-1/2 md:pr-10 md:text-right order-2 md:order-1 hidden md:block">
+          <div class="p-3.5 rounded-2xl border border-slate-800 bg-slate-900/60 text-xs text-slate-300 space-y-1">
+            <div class="font-bold text-sky-400 flex items-center md:justify-end gap-1">
+              <span>✓ CLI Fundamentals</span>
+            </div>
+            <p class="text-slate-400 text-[11px]">Mastered bash pipes, grep, and file permissions.</p>
+          </div>
+        </div>
+
+        <!-- Node Icon -->
+        <div class="relative z-10 w-16 h-16 rounded-3xl bg-gradient-to-tr from-sky-500 to-indigo-500 p-0.5 shadow-xl shadow-sky-500/20 shrink-0 anim-bob order-1 md:order-2">
+          <button 
+            onclick="inspectStage(2, 'Terminal Beach', 'Surviving the command line without accidental rm -rf or permission denials.', '🏖️ Shell Mastered', '+250 EXP')" 
+            class="w-full h-full bg-[#0e1938] hover:bg-sky-950/60 rounded-[22px] flex items-center justify-center text-2xl transition cursor-pointer"
+            aria-label="Inspect Stage 2"
+          >
+            💻
+          </button>
+          <span class="absolute -top-2 -right-2 px-1.5 py-0.2 rounded-full bg-sky-500 text-[10px] font-black text-white font-mono">2</span>
+        </div>
+
+        <div class="w-full md:w-1/2 md:pl-10 order-3">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-sky-500/20 text-sky-300 font-mono text-[10px] font-bold border border-sky-500/30">
+            <span>BIOME: THE COAST</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mt-1">Stage 2: Terminal Beach</h3>
+          <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
+            Navigate through Unix terminal dunes. Write your first shell script and pipe logs without panic.
+          </p>
+          <div class="mt-3 flex flex-wrap gap-2 text-[11px] font-mono">
+            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">chmod +x script.sh</span>
+            <span class="px-2 py-0.5 rounded bg-sky-950 text-sky-400 font-bold">+250 EXP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- BIOME 2: THE CSS SWAMP (Stages 3 & 4)          -->
+      <!-- ============================================== -->
+
+      <!-- STAGE 3: Flexbox Jungle -->
+      <div class="relative flex flex-col md:flex-row items-center gap-6 group">
+        <div class="w-full md:w-1/2 md:pr-10 md:text-right order-2 md:order-1">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-mono text-[10px] font-bold border border-amber-500/30">
+            <span>BIOME: THE JUNGLE</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mt-1">Stage 3: Flexbox Swamp & The Centered Div</h3>
+          <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
+            The graveyard of hundreds who tried to center a modal vertically. Frogs and CSS Grid serpents lurk in every layout reflow.
+          </p>
+          <div class="mt-3 flex flex-wrap md:justify-end gap-2 text-[11px] font-mono">
+            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">items-center justify-center</span>
+            <span class="px-2 py-0.5 rounded bg-amber-950 text-amber-400 font-bold">+500 EXP</span>
+          </div>
+        </div>
+
+        <!-- Node Icon -->
+        <div class="relative z-10 w-16 h-16 rounded-3xl bg-gradient-to-tr from-amber-500 to-orange-500 p-0.5 shadow-xl shadow-amber-500/20 shrink-0 anim-bob order-1 md:order-2">
+          <button 
+            onclick="inspectStage(3, 'Flexbox Swamp', 'The classic trial: CSS specificity wars, overflow: hidden bugs, and z-index 999999 desperation.', '🐸 Div Centered Cleanly', '+500 EXP')" 
+            class="w-full h-full bg-[#0e1938] hover:bg-amber-950/60 rounded-[22px] flex items-center justify-center text-2xl transition cursor-pointer"
+            aria-label="Inspect Stage 3"
+          >
+            🐸
+          </button>
+          <span class="absolute -top-2 -right-2 px-1.5 py-0.2 rounded-full bg-amber-500 text-[10px] font-black text-white font-mono">3</span>
+        </div>
+
+        <div class="w-full md:w-1/2 md:pl-10 order-3">
+          <!-- Interactive mini centered div widget -->
+          <div class="p-3.5 rounded-2xl border border-amber-500/30 bg-amber-500/5 text-xs text-slate-300 space-y-2">
+            <div class="font-bold text-amber-400 flex items-center gap-1.5">
+              <span>Interactive Frog Pond</span>
+              <span class="text-[10px] font-normal text-slate-400">(Click to align)</span>
+            </div>
+            <div id="frog-pond" class="h-14 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center justify-center transition-all duration-300">
+              <span class="text-xl anim-wiggle">🐸</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 4: Responsive Rapids -->
+      <div class="relative flex flex-col md:flex-row items-center gap-6 group">
+        <div class="w-full md:w-1/2 md:pr-10 md:text-right order-2 md:order-1 hidden md:block">
+          <div class="p-3.5 rounded-2xl border border-slate-800 bg-slate-900/60 text-xs text-slate-300 space-y-1">
+            <div class="font-bold text-rose-400 flex items-center md:justify-end gap-1">
+              <span>⚡ Major Elimination Gate</span>
+            </div>
+            <p class="text-slate-400 text-[11px]">Horizontal scrollbar on iPhone SE = Immediate Eviction!</p>
+          </div>
+        </div>
+
+        <!-- Node Icon -->
+        <div class="relative z-10 w-16 h-16 rounded-3xl bg-gradient-to-tr from-rose-500 to-pink-500 p-0.5 shadow-xl shadow-rose-500/20 shrink-0 anim-bob order-1 md:order-2">
+          <button 
+            onclick="inspectStage(4, 'Responsive Rapids', 'Testing across 320px to 4K displays. No horizontal scrollbars tolerated.', '🌊 Mobile Viewport Tamed', '+750 EXP')" 
+            class="w-full h-full bg-[#0e1938] hover:bg-rose-950/60 rounded-[22px] flex items-center justify-center text-2xl transition cursor-pointer"
+            aria-label="Inspect Stage 4"
+          >
+            🌊
+          </button>
+          <span class="absolute -top-2 -right-2 px-1.5 py-0.2 rounded-full bg-rose-500 text-[10px] font-black text-white font-mono">4</span>
+        </div>
+
+        <div class="w-full md:w-1/2 md:pl-10 order-3">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-rose-500/20 text-rose-300 font-mono text-[10px] font-bold border border-rose-500/30">
+            <span>BIOME: THE RAPIDS</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mt-1">Stage 4: Responsive Rapids</h3>
+          <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
+            The rapids will break any fixed-width container. Survive by harnessing media queries and Tailwind breakpoint spells.
+          </p>
+          <div class="mt-3 flex flex-wrap gap-2 text-[11px] font-mono">
+            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">sm:grid-cols-2 lg:grid-cols-4</span>
+            <span class="px-2 py-0.5 rounded bg-rose-950 text-rose-400 font-bold">+750 EXP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- BIOME 3: THE BACKEND DUNGEON (Stages 5, 6, 7)  -->
+      <!-- ============================================== -->
+
+      <!-- STAGE 7: Database Dungeon -->
+      <div class="relative flex flex-col md:flex-row items-center gap-6 group">
+        <div class="w-full md:w-1/2 md:pr-10 md:text-right order-2 md:order-1">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-mono text-[10px] font-bold border border-indigo-500/30">
+            <span>BIOME: THE DUNGEON</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mt-1">Stage 7: Postgres Elephant Cavern</h3>
+          <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
+            Row-level locks, N+1 query monsters, and Prisma migration collisions. The elephants remember every unindexed foreign key.
+          </p>
+          <div class="mt-3 flex flex-wrap md:justify-end gap-2 text-[11px] font-mono">
+            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">FOR UPDATE SKIP LOCKED</span>
+            <span class="px-2 py-0.5 rounded bg-indigo-950 text-indigo-400 font-bold">+1,500 EXP</span>
+          </div>
+        </div>
+
+        <!-- Node Icon -->
+        <div class="relative z-10 w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-500 to-purple-600 p-0.5 shadow-xl shadow-indigo-500/20 shrink-0 anim-bob order-1 md:order-2">
+          <button 
+            onclick="inspectStage(7, 'Postgres Elephant Cavern', 'ACID transactions, concurrent event polling, and index optimizations.', '🐘 Schema Locked & Safe', '+1,500 EXP')" 
+            class="w-full h-full bg-[#0e1938] hover:bg-indigo-950/60 rounded-[22px] flex items-center justify-center text-2xl transition cursor-pointer"
+            aria-label="Inspect Stage 7"
+          >
+            🐘
+          </button>
+          <span class="absolute -top-2 -right-2 px-1.5 py-0.2 rounded-full bg-indigo-500 text-[10px] font-black text-white font-mono">7</span>
+        </div>
+
+        <div class="w-full md:w-1/2 md:pl-10 order-3">
+          <div class="p-3.5 rounded-2xl border border-slate-800 bg-slate-900/60 text-xs text-slate-300 space-y-1">
+            <div class="font-bold text-indigo-400 flex items-center gap-1">
+              <span>🛡️ High Stakes Stage</span>
+            </div>
+            <p class="text-slate-400 text-[11px]">Only 1,200 interns reach this cavern.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- BIOME 4: THE FINALIST CITADEL (Stage 10)       -->
+      <!-- ============================================== -->
+
+      <!-- STAGE 10: The Finalists' Citadel -->
+      <div class="relative flex flex-col md:flex-row items-center gap-6 group">
+        <div class="w-full md:w-1/2 md:pr-10 md:text-right order-2 md:order-1 hidden md:block">
+          <div class="p-4 rounded-2xl border border-amber-400/40 bg-gradient-to-r from-amber-500/20 to-amber-500/5 text-xs text-amber-200 space-y-1.5">
+            <div class="font-extrabold text-amber-300 flex items-center md:justify-end gap-1.5 text-sm">
+              <span>🏆 Top 5% of African Tech Interns</span>
+            </div>
+            <p class="text-slate-300 text-[11px]">Hired by international startups, inducted into HNG Hall of Fame.</p>
+          </div>
+        </div>
+
+        <!-- Node Icon: Golden Citadel Tower -->
+        <div class="relative z-10 w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-300 via-amber-500 to-yellow-600 p-1 shadow-2xl shadow-amber-500/40 shrink-0 anim-bob order-1 md:order-2">
+          <button 
+            onclick="claimCitadelTrophy()" 
+            class="w-full h-full bg-[#0a1128] hover:bg-amber-950/80 rounded-[20px] flex items-center justify-center text-3xl transition cursor-pointer pulse-ring"
+            aria-label="Claim Citadel Trophy"
+          >
+            🏰
+          </button>
+          <span class="absolute -top-3 -right-2 px-2 py-0.5 rounded-full bg-amber-400 text-[11px] font-black text-slate-900 font-mono shadow-md">10</span>
+        </div>
+
+        <div class="w-full md:w-1/2 md:pl-10 order-3">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-400/20 text-amber-300 font-mono text-[10px] font-bold border border-amber-400/40">
+            <span>VALHALLA REACHED</span>
+          </div>
+          <h3 class="text-2xl font-black text-white mt-1">Stage 10: The Finalist Citadel</h3>
+          <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+            You made it. Through power cuts, slow internet, git conflicts, and midnight task deadlines. Click the Citadel to open your finalist treasure!
+          </p>
+          <div class="mt-3 flex flex-wrap gap-2 text-[11px] font-mono">
+            <span class="px-2.5 py-1 rounded bg-amber-400 text-slate-900 font-bold">HNG Finalist Verified</span>
+            <span class="px-2.5 py-1 rounded bg-amber-950 text-amber-400 font-bold">+10,000 EXP</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ============================================== -->
+  <!-- MODAL: STAGE INSPECTION DIALOG                 -->
+  <!-- ============================================== -->
+  <div id="stage-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="w-full max-w-lg rounded-3xl border border-sky-500/40 bg-[#0e1938] text-white p-6 shadow-2xl space-y-4 relative">
+      <button onclick="closeStageModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xs font-mono cursor-pointer">[ESC]</button>
+      
+      <div class="flex items-center gap-3">
+        <div id="modal-stage-num" class="w-10 h-10 rounded-2xl bg-sky-500/20 border border-sky-400/40 flex items-center justify-center font-black font-mono text-sky-300 text-lg">
+          #
+        </div>
+        <div>
+          <h3 id="modal-stage-title" class="font-bold text-lg text-white">Stage Title</h3>
+          <span id="modal-stage-reward" class="text-xs font-mono text-amber-400 font-bold">+0 EXP</span>
+        </div>
+      </div>
+
+      <p id="modal-stage-desc" class="text-xs text-slate-300 leading-relaxed pt-2">
+        Stage detailed instructions and survival guide.
+      </p>
+
+      <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs font-mono text-emerald-400 flex items-center gap-2">
+        <span id="modal-stage-perk">Perk</span>
+      </div>
+
+      <div class="pt-2 flex items-center justify-end gap-2">
+        <button onclick="closeStageModal()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition cursor-pointer">
+          Continue Odyssey
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: HNG INTERN PASS GENERATOR (Whimsical ID) -->
+  <!-- ============================================== -->
+  <div id="pass-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+    <div class="w-full max-w-md rounded-3xl border border-amber-400/40 bg-[#0a1128] text-white p-6 shadow-2xl space-y-5 relative">
+      <button onclick="closePassModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xs font-mono cursor-pointer">[Close ESC]</button>
+      
+      <div class="text-center space-y-1">
+        <span class="text-2xl">🪪</span>
+        <h3 class="font-extrabold text-xl text-white">Mint Your Start.ng Pass</h3>
+        <p class="text-xs text-slate-400">Generate your personalized whimsical intern credential.</p>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Your Intern Name</label>
+          <input 
+            id="pass-name-input" 
+            type="text" 
+            value="Chukwu Sunday" 
+            class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-700 bg-slate-900 text-white focus:outline-none focus:border-amber-400 font-semibold"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Intern Class</label>
+            <select id="pass-class-select" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-700 bg-slate-900 text-white focus:outline-none focus:border-amber-400">
+              <option value="Frontend Alchemist" selected>Frontend Alchemist 🧙‍♂️</option>
+              <option value="Backend Warlock">Backend Warlock 🔮</option>
+              <option value="DevOps Ranger">DevOps Ranger 🏹</option>
+              <option value="Product Wizard">Product Wizard ✨</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Spirit Companion</label>
+            <select id="pass-companion-select" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-700 bg-slate-900 text-white focus:outline-none focus:border-amber-400">
+              <option value="Git Goblin" selected>Git Goblin 👺</option>
+              <option value="Postgres Elephant">Postgres Elephant 🐘</option>
+              <option value="Cyber Cat">Cyber Cat 🐱</option>
+              <option value="Bug Squeezer">Bug Squeezer 🔨</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Generated Hologram Badge Card -->
+      <div id="hologram-card" class="p-4 rounded-2xl bg-gradient-to-tr from-amber-400/10 via-rose-500/10 to-sky-500/15 border border-amber-400/40 text-xs space-y-3 shadow-inner">
+        <div class="flex items-center justify-between">
+          <span class="font-mono text-[10px] text-amber-300 font-bold uppercase">START.NG VERIFIED CREDENTIAL</span>
+          <span class="font-mono text-[10px] text-slate-400">#HNG-2026-984</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-amber-400 text-slate-900 font-black text-xl flex items-center justify-center shrink-0 shadow-md">
+            C
+          </div>
+          <div>
+            <div id="badge-display-name" class="font-extrabold text-sm text-white">Chukwu Sunday</div>
+            <div id="badge-display-class" class="text-[11px] text-amber-300 font-mono">Frontend Alchemist 🧙‍♂️</div>
+          </div>
+        </div>
+        <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] font-mono text-slate-400">
+          <span>Eviction Immunity: YES</span>
+          <span>EXP: 4,850</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 pt-2">
+        <button onclick="closePassModal()" class="px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-800 text-xs text-slate-300 transition">
+          Cancel
+        </button>
+        <button onclick="mintPass()" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-900 font-extrabold text-xs shadow-lg shadow-amber-400/20 transition cursor-pointer">
+          Mint & Celebrate 🎉
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    let currentScore = 4850;
+    let shieldActive = true;
+    let audioEnabled = true;
+
+    // Confetti explosion
+    function triggerConfetti() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      }
+    }
+
+    // Toggle Eviction Shield
+    function toggleEvictionShield() {
+      shieldActive = !shieldActive;
+      const statusText = document.getElementById('shield-status-text');
+      const btn = document.getElementById('shield-toggle-btn');
+      if (shieldActive) {
+        statusText.innerText = "ARMED";
+        statusText.className = "font-bold text-cyan-400";
+        btn.classList.add('shield-active');
+        alert("🛡️ Eviction Shield Activated! You are immune to midnight task eliminations for the next 24 hours.");
+      } else {
+        statusText.innerText = "OFFLINE";
+        statusText.className = "font-bold text-rose-400";
+        btn.classList.remove('shield-active');
+        alert("⚠️ Eviction Shield Disarmed! Beware of sudden stage deadlines!");
+      }
+    }
+
+    // Squish Bug mini game
+    function squishBug(btn) {
+      currentScore += 150;
+      document.getElementById('player-score').innerText = currentScore.toLocaleString();
+      btn.innerText = "💥";
+      btn.disabled = true;
+      btn.classList.remove('hover:scale-125');
+      setTimeout(() => {
+        btn.innerText = "✨";
+        setTimeout(() => {
+          btn.innerText = "🐛";
+          btn.disabled = false;
+          btn.classList.add('hover:scale-125');
+        }, 1500);
+      }, 500);
+    }
+
+    // Interactive Stage Inspector
+    function inspectStage(num, title, desc, perk, reward) {
+      document.getElementById('modal-stage-num').innerText = '#' + num;
+      document.getElementById('modal-stage-title').innerText = 'Stage ' + num + ': ' + title;
+      document.getElementById('modal-stage-desc').innerText = desc;
+      document.getElementById('modal-stage-perk').innerText = perk;
+      document.getElementById('modal-stage-reward').innerText = reward;
+      document.getElementById('stage-modal').classList.remove('hidden');
+    }
+    function closeStageModal() {
+      document.getElementById('stage-modal').classList.add('hidden');
+    }
+
+    // Claim Citadel Trophy
+    function claimCitadelTrophy() {
+      triggerConfetti();
+      setTimeout(triggerConfetti, 400);
+      setTimeout(triggerConfetti, 800);
+      alert("🏆 CONGRATULATIONS! You reached Stage 10: The Finalist Citadel! You survived Start.ng and graduated into the HNG Finalist Hall of Fame!");
+    }
+
+    // Pass Modal
+    function openPassModal() {
+      document.getElementById('pass-modal').classList.remove('hidden');
+    }
+    function closePassModal() {
+      document.getElementById('pass-modal').classList.add('hidden');
+    }
+    function mintPass() {
+      const name = document.getElementById('pass-name-input').value || "Chukwu Sunday";
+      const cls = document.getElementById('pass-class-select').value;
+      document.getElementById('badge-display-name').innerText = name;
+      document.getElementById('badge-display-class').innerText = cls;
+      triggerConfetti();
+      setTimeout(() => {
+        alert("🎉 Your Start.ng Adventurer Pass has been minted! Stage 10 unlocked.");
+        closePassModal();
+      }, 800);
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      document.getElementById('sound-icon').innerText = audioEnabled ? "🔊" : "🔇";
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeStageModal();
+        closePassModal();
+      }
+    });
+  </script>
+</body>
+</html>
